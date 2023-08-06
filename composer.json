@@ -2,6 +2,7 @@
   "name": "efko-cr/alpha",
   "description": "Компонентный фреймворк, предоставляющий возможность быстрой реализации веб-приложений и API",
   "license": "MIT",
+  "version": "0.0.1",
   "authors": [
     {
       "name": "Andrey Bogachevskiy",
