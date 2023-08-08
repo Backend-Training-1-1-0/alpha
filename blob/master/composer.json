@@ -1,0 +1,21 @@
+{
+  "name": "efko-cr/alpha",
+  "description": "Компонентный фреймворк, предоставляющий возможность быстрой реализации веб-приложений и API",
+  "license": "MIT",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Aleksandr Dankovtsev",
+      "email": "a.dankovtsev@efko.ru"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Alpha\\": "src"
+    }
+  }
+}
