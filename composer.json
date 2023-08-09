@@ -2,7 +2,7 @@
   "name": "efko-cr/alpha",
   "description": "Компонентный фреймворк, предоставляющий возможность быстрой реализации веб-приложений и API",
   "license": "MIT",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "authors": [
     {
       "name": "Andrey Bogachevskiy",
@@ -15,6 +15,14 @@
     {
       "name": "Ekaterina Nalivkina",
       "email": "e.nalivkina@efko.ru"
+    },
+    {
+      "name": "Nikita Hatuntsev",
+      "email": "n.a.hatuntsev@efko.ru"
+    },
+    {
+      "name": "Oleg Fuzeev",
+      "email": "o.fuzeev@efko.ru"
     }
   ],
   "minimum-stability": "stable",

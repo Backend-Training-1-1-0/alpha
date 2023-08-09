@@ -4,15 +4,8 @@ namespace Alpha\Contracts;
 
 interface ConsoleCommandInterface
 {
-    static function getName(): string;
-
+    static function getSignature(): string;
     static function getDescription(): string;
-
-    function getCommandInfo(array $args): void;
-
+    static function getHidden(): bool;
     function execute(): void;
-
-    function getArguments(): array;
-
-    static function isHidden(): bool;
 }

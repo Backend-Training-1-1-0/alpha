@@ -6,6 +6,17 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.2.0](https://github.com/EFKO-CR/alpha/releases/tag/0.2.0) ] - 09.08.2023
+
+- Изменено:
+  - Подготовка требуемых и введенных параметров консольной команды перенесена и ConsoleKernel в InfoCommand
+  - Вывод информации о командах через общую команду info
+
+## [ [0.1.1](https://github.com/EFKO-CR/alpha/releases/tag/0.1.1) ] - 09.08.2023
+
+- Исправлено:
+  - namespace в пакетах
+
 ## [ [0.1.0](https://github.com/EFKO-CR/alpha/releases/tag/0.1.0) ] - 09.08.2023
 
 - Реализованно:
