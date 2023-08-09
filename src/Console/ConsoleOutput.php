@@ -1,6 +1,6 @@
 <?php
 
-namespace Alpha\Components\ConsoleOutput;
+namespace Alpha\Console;
 
 use Alpha\Contracts\ConsoleOutputInterface;
 
