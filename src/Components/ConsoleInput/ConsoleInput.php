@@ -1,8 +1,8 @@
 <?php
 
-namespace Components\ConsoleInput;
+namespace Alpha\Components\ConsoleInput;
 
-use Contracts\ConsoleInputInterface;
+use Alpha\Contracts\ConsoleInputInterface;
 
 class ConsoleInput implements ConsoleInputInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Http;
+namespace Alpha\Http;
 
-use Contracts\{
+use Alpha\Contracts\{
     HttpMiddlewareInterface,
     HttpRequestInterface,
     HttpRouterInterface,

@@ -1,8 +1,8 @@
 <?php
 
-namespace Components\EventDispatcher;
+namespace Alpha\Components\EventDispatcher;
 
-use Contracts\MessageInterface;
+use Alpha\Contracts\MessageInterface;
 
 class Message implements MessageInterface
 {

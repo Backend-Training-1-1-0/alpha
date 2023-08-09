@@ -1,17 +1,16 @@
 <?php
 
-namespace Contracts;
+namespace Alpha\Contracts;
 
-use Contracts\ObserverInterface;
-use Components\EventDispatcher\Message;
-use Modules\NumberGenerator\Event;
+use Alpha\Contracts\ObserverInterface;
+use Alpha\Components\EventDispatcher\Message;
 
 interface EventDispatcherInterface
 {
     function __construct();
 
-    function attach(Event $event, ObserverInterface $observer): void;
-    function detach(Event $event): void;
-    function notify(Event $event, Message $message): void;
+    function attach($event, ObserverInterface $observer): void;
+    function detach($event): void;
+    function notify($event, Message $message): void;
     function configure(array $config): void;
 }

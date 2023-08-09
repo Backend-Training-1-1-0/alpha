@@ -1,9 +1,9 @@
 <?php
 
-namespace Components\DIContainer;
+namespace Alpha\Components\DIContainer;
 
-use Contracts\DIContainerInterface;
-use http\Exception\RuntimeException;
+use Alpha\Contracts\DIContainerInterface;
+use Alpha\Http\Exception\RuntimeException;
 use ReflectionMethod;
 
 include 'functions.php';
