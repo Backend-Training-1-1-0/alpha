@@ -5,8 +5,8 @@
   "version": "0.1.0",
   "authors": [
     {
-      "name": "Aleksandr Dankovtsev",
-      "email": "a.dankovtsev@efko.ru"
+      "name": "Andrey Bogachevskiy, Aleksandr Dankovtsev",
+      "email": "a.bogachevskiy@efko.ru, a.dankovtsev@efko.ru"
     }
   ],
   "minimum-stability": "stable",

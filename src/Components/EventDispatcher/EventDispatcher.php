@@ -2,6 +2,8 @@
 
 namespace Components\EventDispatcher;
 
+use Contracts\ObserverInterface;
+use Contracts\EventDispatcherInterface;
 use Modules\NumberGenerator\Event;
 
 class EventDispatcher implements EventDispatcherInterface

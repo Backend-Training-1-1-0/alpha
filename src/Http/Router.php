@@ -2,10 +2,11 @@
 
 namespace Http;
 
-use Framework\Contracts\{
+use Contracts\{
     HttpMiddlewareInterface,
     HttpRequestInterface,
-    HttpRouterInterface};
+    HttpRouterInterface,
+};
 use InvalidArgumentException;
 
 class Router implements HttpRouterInterface

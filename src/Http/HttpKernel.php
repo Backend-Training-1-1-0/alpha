@@ -6,7 +6,8 @@ use Contracts\{
     HttpResponseInterface,
     HttpKernelInterface,
     HttpRequestInterface,
-    HttpRouterInterface};
+    HttpRouterInterface,
+};
 
 class HttpKernel implements HttpKernelInterface
 {

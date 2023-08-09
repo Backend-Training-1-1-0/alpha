@@ -1,7 +1,9 @@
 <?php
 
-namespace Components\EventDispatcher;
+namespace Contracts;
 
+use Contracts\ObserverInterface;
+use Components\EventDispatcher\Message;
 use Modules\NumberGenerator\Event;
 
 interface EventDispatcherInterface

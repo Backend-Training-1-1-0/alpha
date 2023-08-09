@@ -2,6 +2,8 @@
 
 namespace Components\ConsoleInput;
 
+use Contracts\ConsoleInputInterface;
+
 class ConsoleInput implements ConsoleInputInterface
 {
     public array $arguments = [];

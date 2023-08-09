@@ -2,6 +2,8 @@
 
 namespace Components\EventDispatcher;
 
+use Contracts\MessageInterface;
+
 class Message implements MessageInterface
 {
     public function __construct(private mixed $message) { }

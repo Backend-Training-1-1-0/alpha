@@ -1,6 +1,7 @@
 <?php
 
-namespace Components\DIContainer;
+namespace Contracts;
+
 interface DIContainerInterface
 {
     static function getInstance(array $config = []): self;

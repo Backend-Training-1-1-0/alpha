@@ -5,7 +5,8 @@ namespace Console\Commands;
 use Components\ConsoleInput\ConsoleInput;
 use Contracts\{
     ConsoleCommandInterface,
-    ConsoleKernelInterface};
+    ConsoleKernelInterface,
+};
 
 class InfoCommand implements ConsoleCommandInterface
 {

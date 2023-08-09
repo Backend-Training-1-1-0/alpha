@@ -1,6 +1,6 @@
 <?php
 
-namespace Components\EventDispatcher;
+namespace Contracts;
 
 interface MessageInterface
 {

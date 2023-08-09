@@ -5,7 +5,8 @@ namespace Console;
 use Components\ConsoleInput\ConsoleInput;
 use Contracts\{
     ConsoleCommandInterface,
-    ConsoleKernelInterface};
+    ConsoleKernelInterface,
+};
 
 class ConsoleKernel implements ConsoleKernelInterface
 {

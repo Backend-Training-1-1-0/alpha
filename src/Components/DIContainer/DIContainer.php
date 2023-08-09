@@ -2,6 +2,7 @@
 
 namespace Components\DIContainer;
 
+use Contracts\DIContainerInterface;
 use http\Exception\RuntimeException;
 use ReflectionMethod;
 
