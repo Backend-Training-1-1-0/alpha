@@ -1,10 +1,9 @@
 <?php
 
-namespace Components\EventDispatcher;
+namespace Alpha\Components\EventDispatcher;
 
-use Contracts\ObserverInterface;
-use Contracts\EventDispatcherInterface;
-use Modules\NumberGenerator\Event;
+use Alpha\Contracts\ObserverInterface;
+use Alpha\Contracts\EventDispatcherInterface;
 
 class EventDispatcher implements EventDispatcherInterface
 {
@@ -12,12 +11,12 @@ class EventDispatcher implements EventDispatcherInterface
 
     public function __construct() { }
 
-    public function attach(Event $event, ObserverInterface $observer): void
+    public function attach($event, ObserverInterface $observer): void
     {
         $this->observers[$event->value][] = $observer;
     }
 
-    public function detach(Event $event): void
+    public function detach($event): void
     {
         if (isset($this->observers[$event->value]) === false) {
             return;
@@ -26,7 +25,7 @@ class EventDispatcher implements EventDispatcherInterface
         unset($this->observers[$event->value]);
     }
 
-    public function notify(Event $event, Message $message): void
+    public function notify($event, Message $message): void
     {
         if (isset($this->observers[$event->value]) === false) {
             return;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Components\ConsoleOutput;
+namespace Alpha\Components\ConsoleOutput;
 
-use Contracts\ConsoleOutputInterface;
+use Alpha\Contracts\ConsoleOutputInterface;
 
 class ConsoleOutput implements ConsoleOutputInterface
 {

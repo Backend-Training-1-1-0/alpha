@@ -1,8 +1,8 @@
 <?php
 
-namespace Http;
+namespace Alpha\Http;
 
-use Contracts\HttpResponseInterface;
+use Alpha\Contracts\HttpResponseInterface;
 
 class Response implements HttpResponseInterface
 {

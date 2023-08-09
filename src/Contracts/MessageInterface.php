@@ -1,6 +1,6 @@
 <?php
 
-namespace Contracts;
+namespace Alpha\Contracts;
 
 interface MessageInterface
 {

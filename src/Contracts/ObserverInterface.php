@@ -1,11 +1,10 @@
 <?php
 
-namespace Contracts;
+namespace Alpha\Contracts;
 
-use Components\EventDispatcher\Message;
-use Modules\NumberGenerator\Event;
+use Alpha\Components\EventDispatcher\Message;
 
 interface ObserverInterface
 {
-    function observe(Event $event, Message $message): void;
+    function observe($event, Message $message): void;
 }

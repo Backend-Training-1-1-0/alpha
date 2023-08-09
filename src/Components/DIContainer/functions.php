@@ -1,6 +1,6 @@
 <?php
 
-use Components\DIContainer\DIContainer;
+use Alpha\Components\DIContainer\DIContainer;
 
 function container(): DIContainer {
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace FHttp;
+namespace Alpha\Http;
 
-use Contracts\HttpRequestInterface;
+use Alpha\Contracts\HttpRequestInterface;
 
 class Request implements HttpRequestInterface
 {

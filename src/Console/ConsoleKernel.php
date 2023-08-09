@@ -1,9 +1,9 @@
 <?php
 
-namespace Console;
+namespace Alpha\Console;
 
-use Components\ConsoleInput\ConsoleInput;
-use Contracts\{
+use Alpha\Components\ConsoleInput\ConsoleInput;
+use Alpha\Contracts\{
     ConsoleCommandInterface,
     ConsoleKernelInterface,
 };
