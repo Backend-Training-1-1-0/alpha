@@ -6,6 +6,11 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.2.3](https://github.com/EFKO-CR/alpha/releases/tag/0.2.3) ] - 09.08.2023
+
+- Исправлено:
+  - Заполнение дефолтных значений
+
 ## [ [0.2.2](https://github.com/EFKO-CR/alpha/releases/tag/0.2.2) ] - 09.08.2023
 
 - Исправлено:
