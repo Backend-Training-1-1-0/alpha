@@ -56,7 +56,7 @@ class ConsoleInput implements ConsoleInputInterface
     private function setDefaults(): void
     {
         foreach ($this->definition->arguments as $paramName => $paramProperties) {
-            if ($paramProperties['default'] !== null) {
+            if (empty($this->arguments[$paramName]) === true && $paramProperties['default'] !== null) {
                 $this->arguments[$paramName] = $paramProperties['default'];
             }
         }
