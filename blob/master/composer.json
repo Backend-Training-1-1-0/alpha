@@ -5,8 +5,16 @@
   "version": "0.1.0",
   "authors": [
     {
-      "name": "Andrey Bogachevskiy, Aleksandr Dankovtsev, Ekaterina Nalivkina",
-      "email": "a.bogachevskiy@efko.ru, a.dankovtsev@efko.ru, e.nalivkina@efko.ru"
+      "name": "Andrey Bogachevskiy",
+      "email": "a.bogachevskiy@efko.ru"
+    },
+    {
+      "name": "Aleksandr Dankovtsev",
+      "email": "a.dankovtsev@efko.ru"
+    },
+    {
+      "name": "Ekaterina Nalivkina",
+      "email": "e.nalivkina@efko.ru"
     }
   ],
   "minimum-stability": "stable",
