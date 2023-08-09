@@ -2,31 +2,40 @@
 
 namespace Alpha\Console\Commands;
 
-use Alpha\Components\ConsoleInput\ConsoleInput;
 use Alpha\Contracts\{
     ConsoleCommandInterface,
+    ConsoleInputInterface,
     ConsoleKernelInterface,
+    ConsoleOutputInterface,
 };
 
 class InfoCommand implements ConsoleCommandInterface
 {
-    const COMMAND_NAME = 'info {?commandName}';
-    const COMMAND_ARGUMENTS = ['commandName'=> ['description' => 'имя команды', 'isRequired'=> 'не обязательный параметр']];
-    const COMMAND_DESCRIPTION = 'Вывод информации о доступных командах';
+    private static string $signature = 'info {?commandName:имя команды}';
+    private static string $description = 'Вывод информации о доступных командах';
+    private static bool $hidden = true;
 
     public function __construct(
-        private ConsoleKernelInterface $kernel,
-        public ConsoleInput $input
-    ) { }
+        private readonly ConsoleInputInterface $input,
+        private readonly ConsoleOutputInterface $output,
+        private readonly ConsoleKernelInterface $kernel,
+    ) {
+        $this->input->bindDefinition($this);
+    }
 
-    static function getName(): string
+    static function getSignature(): string
     {
-        return self::COMMAND_NAME;
+        return self::$signature;
     }
 
     static function getDescription(): string
     {
-        return self::COMMAND_DESCRIPTION;
+        return self::$description;
+    }
+
+    public function getHidden(): bool
+    {
+        return self::$hidden;
     }
 
     function getCommandInfo(array $args): void
@@ -76,10 +85,7 @@ class InfoCommand implements ConsoleCommandInterface
 
     }
 
-    public static function isHidden(): bool
-    {
-        return true;
-    }
+
 
     private function getInfo(): void
     {

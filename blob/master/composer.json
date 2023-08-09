@@ -15,6 +15,14 @@
     {
       "name": "Ekaterina Nalivkina",
       "email": "e.nalivkina@efko.ru"
+    },
+    {
+      "name": "Nikita Hatuntsev",
+      "email": "n.a.hatuntsev@efko.ru"
+    },
+    {
+      "name": "Oleg Fuzeev",
+      "email": "o.fuzeev@efko.ru"
     }
   ],
   "minimum-stability": "stable",

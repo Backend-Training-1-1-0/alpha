@@ -34,7 +34,7 @@ class ConsoleKernel implements ConsoleKernelInterface
     {
         $namespaceName = str_replace(['/', '\app\\'], ['\\', ''], strstr($className, '.php', true));
 
-        if (is_subclass_of($namespaceName, ConsoleCommandInterface::class) === false) {
+        if (is_subclass_of(ucfirst($namespaceName), ConsoleCommandInterface::class) === false) {
             throw new \InvalidArgumentException("Неверный тип объекта $namespaceName");
         }
 
@@ -58,20 +58,10 @@ class ConsoleKernel implements ConsoleKernelInterface
         $handler = $this->commandMap[$command]['namespace']
             ?? throw new \Exception("Команда $command не найдена", 404);
 
-        $paramsString = explode(' ', call_user_func([$handler, 'getName']))[1] ?? '';
-
-        $args = $this->mapArgs($params, $paramsString);
-
         $handler = container()->build($handler);
+        $handler->input->params = $params;
 
-        $this->addArgumentsInInput($handler->input, $params, $paramsString);
-
-        if (in_array('-h', $argv)) {
-            $handler->getCommandInfo($this->prepareArgs($paramsString));
-            return;
-        }
-
-        $handler->execute(...$args);
+        $handler->execute();
 
     }
 
