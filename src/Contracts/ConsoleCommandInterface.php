@@ -11,6 +11,7 @@ interface ConsoleCommandInterface
     function getCommandInfo(array $args): void;
 
     function execute(): void;
+
     function getArguments(): array;
 
     static function isHidden(): bool;
