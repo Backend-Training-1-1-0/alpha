@@ -71,9 +71,11 @@ class InfoCommand implements ConsoleCommandInterface
 
         echo "\033[32mВызов:\033[0m" . PHP_EOL;
 
+        echo  "$commandName";
+
         if (count($arguments) > 0) {
             foreach ($arguments as $key => $value) {
-                echo  "$commandName [$key]";
+                echo  " [$key]";
             }
         }
 

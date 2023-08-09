@@ -151,13 +151,13 @@ class Router implements HttpRouterInterface
             }
 
             if (is_string($middleware) === false) {
-                throw new InvalidArgumentException();
+                throw new InvalidArgumentException('Значение middlewares должно быть строкой');
             }
 
             $middlewareInstance = new $middleware;
 
             if ($middlewareInstance instanceof HttpMiddlewareInterface === false) {
-                throw new InvalidArgumentException();
+                throw new InvalidArgumentException("Неверный тип объекта $middleware");
             }
 
             $middlewareInstance->execute($request);
@@ -168,19 +168,20 @@ class Router implements HttpRouterInterface
     {
         $arguments = [];
 
+        /** @var RouteParameter $param */
         foreach ($route->params as $param) {
-            $paramExists = in_array($param['name'], array_keys($request->get()));
+            $paramExists = in_array($param->name, array_keys($request->get()));
 
-            if ($param['isRequired'] === true && $paramExists === false) {
-                throw new \InvalidArgumentException('отсутствуют обязательные аргументы: ' . $param['name']);
+            if ($param->isRequired === true && $paramExists === false) {
+                throw new \InvalidArgumentException('отсутствуют обязательные аргументы: ' . $param->name);
             }
 
             if ($paramExists === true) {
-                $arguments[] = $request->get()[$param['name']];
+                $arguments[] = $request->get()[$param->name];
             }
 
-            if (empty($paramProperties['defaultValue']) === false && $paramExists === false) {
-                $arguments[] = $paramProperties['defaultValue'];
+            if (empty($param->defaultValue) === false && $paramExists === false) {
+                $arguments[] = $param->defaultValue;
             }
         }
 
@@ -189,32 +190,16 @@ class Router implements HttpRouterInterface
 
     private function prepareParams(string $route): array
     {
-        $paramString = parse_url($route, PHP_URL_QUERY) ?? "";
-
-        $resultParams = [];
-        preg_match_all('/\{([^}]*)\}/', $paramString, $params);
-
-        foreach ($params[1] as $param) {
-            $isRequired = true;
-            if (str_starts_with($param, '?')) {
-                $param = substr($param, 1);
-                $isRequired = false;
-            }
-
-            $defaultValue = null;
-            if (substr_count($param, '=') === 1 && str_ends_with($param, '=') === false) {
-                $arr = explode('=', $param);
-                $defaultValue = $arr[1];
-                $param = $arr[0];
-            }
-
-            $resultParams[] = [
-                'name' => $param,
-                'isRequired' => $isRequired,
-                'defaultValue' => $defaultValue,
-            ];
+        if (preg_match_all('/{\s*(.*?)\s*}/', $route, $matches) === false) {
+            return [];
         }
 
-        return $resultParams;
+        $bindings = [];
+
+        foreach ($matches[1] as $param) {
+            $bindings[] = new RouteParameter($param);
+        }
+
+        return $bindings;
     }
 }
