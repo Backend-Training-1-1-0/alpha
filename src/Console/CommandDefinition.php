@@ -27,8 +27,8 @@ class CommandDefinition
             $defaultValue = null;
 
             $parts = explode(':', $prepareString);
-            $name = trim($parts[0]);
-            $description = trim($parts[1]);
+            $name = isset($parts[0]) ? trim($parts[0]) : '';
+            $description = isset($parts[1]) ? trim($parts[1]) : '';
 
             if (str_starts_with($name, '?')) {
                 $name = substr($name, 1);
@@ -36,7 +36,7 @@ class CommandDefinition
             }
 
             if (str_contains($name, '--')) {
-                $this->options[str_replace('--', '', $name)] = [
+                $this->options[$name] = [
                     'description' => $description,
                 ];
 

@@ -6,6 +6,6 @@ interface ConsoleCommandInterface
 {
     static function getSignature(): string;
     static function getDescription(): string;
-    function getHidden(): bool;
+    static function getHidden(): bool;
     function execute(): void;
 }
