@@ -37,9 +37,9 @@ class ConsoleKernel implements ConsoleKernelInterface
             throw new \InvalidArgumentException("Неверный тип объекта $namespaceName");
         }
 
-        $name = explode(' ', call_user_func([$namespaceName, 'getName']))[0];
+        $name = explode(' ', call_user_func([$namespaceName, 'getSignature']))[0];
         $description = call_user_func([$namespaceName, 'getDescription']);
-        $isHidden = call_user_func([$namespaceName, 'isHidden']);
+        $isHidden = call_user_func([$namespaceName, 'getHidden']);
 
         $this->commandMap[$name] = [
             'namespace' => $namespaceName,
@@ -58,10 +58,8 @@ class ConsoleKernel implements ConsoleKernelInterface
             ?? throw new \Exception("Команда $command не найдена", 404);
 
         $handler = container()->build($handler);
-        $handler->input->params = $params;
 
         $handler->execute();
-
     }
 
     public function getCommandMap()
