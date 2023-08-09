@@ -62,18 +62,9 @@ class ConsoleInput implements ConsoleInputInterface
         }
     }
 
-    public function getOption(string $option): mixed
-    {
-        if (empty($this->options[$option]) === false) {
-            return $this->options[$option];
-        }
-
-        return false;
-    }
-
     public function hasOption(string $option): bool
     {
-        return empty($this->options[$option]) === false;
+        return in_array($option, $this->options);
     }
 
     public function getArgument(string $argument): mixed
