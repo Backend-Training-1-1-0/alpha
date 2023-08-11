@@ -43,12 +43,14 @@ class ConsoleInput implements ConsoleInputInterface
 
         if ($this->hasOption('--interactive') === true) {
             foreach ($this->definition->arguments as $key => $value) {
-                $this->definition->arguments[$key]['default'] = $this->getInput($key, "Введите $key ({$value["description"]}):");
-            }
-        }
+                $default = empty($value['default']) === false ? " [{$value['default']}]" : '';
 
-        foreach ($this->definition->options as $key => $value) {
-            $this->askForApproval($key, $value);
+                $this->arguments[$key] = $this->getInput($key, "Введите $key ({$value["description"]}) $default:");
+            }
+
+            foreach ($this->definition->options as $key => $value) {
+                $this->askForApproval($key, $value);
+            }
         }
     }
 
@@ -114,18 +116,13 @@ class ConsoleInput implements ConsoleInputInterface
 
     public function askForApproval(string $key, array $value): void
     {
-        if ($this->hasOption($key) === true) {
-            echo "Применить опцию $key? ({$value["description"]}) [да] да/нет" . PHP_EOL;
-            $handle = fopen("php://stdin", "r");
-            $approval = trim(fgets($handle));
-            fclose($handle);
+        echo "Применить опцию $key? ({$value["description"]}) [да] да/нет" . PHP_EOL;
+        $handle = fopen("php://stdin", "r");
+        $approval = trim(fgets($handle));
+        fclose($handle);
 
-            if ($approval === '' || $approval === 'да') {
-                return;
-            }
-
-            $keyToRemove = array_search($key, $this->options);
-            unset($this->options[$keyToRemove]);
+        if ($approval === '' || $approval === 'да') {
+            $this->options[] = $key;
         }
     }
 }
