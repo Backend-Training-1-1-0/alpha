@@ -37,8 +37,6 @@ class Router implements HttpRouterInterface
         foreach ($this->routes[$method][$path] as $route) {
             $handler = $route->handler;
 
-            $arguments = $this->mapArgs($request, $route);
-
             // Вызов глобального middleware
             $this->handleMiddleware($this->middlewares, $request);
 
@@ -49,15 +47,8 @@ class Router implements HttpRouterInterface
             foreach ($route->groupStack as $group) {
                 $this->handleMiddleware($this->groupMiddlewares[$group], $request);
             }
-            $arguments[] = $request;
 
-            if (is_callable($handler)) {
-                return $handler(...$arguments);
-            }
-
-            $handlerClass = container()->build($route->handler);
-
-            return $handlerClass->{$route->action}(...$arguments);
+            return container()->call($handler, $route->action, $request->get());
         }
     }
 
@@ -162,30 +153,6 @@ class Router implements HttpRouterInterface
 
             $middlewareInstance->execute($request);
         }
-    }
-
-    private function mapArgs(HttpRequestInterface $request, Route $route): array
-    {
-        $arguments = [];
-
-        /** @var RouteParameter $param */
-        foreach ($route->params as $param) {
-            $paramExists = in_array($param->name, array_keys($request->get()));
-
-            if ($param->isRequired === true && $paramExists === false) {
-                throw new \InvalidArgumentException('отсутствуют обязательные аргументы: ' . $param->name);
-            }
-
-            if ($paramExists === true) {
-                $arguments[] = $request->get()[$param->name];
-            }
-
-            if (empty($param->defaultValue) === false && $paramExists === false) {
-                $arguments[] = $param->defaultValue;
-            }
-        }
-
-        return $arguments;
     }
 
     private function prepareParams(string $route): array

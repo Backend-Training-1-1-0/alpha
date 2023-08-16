@@ -3,8 +3,9 @@
 namespace Alpha\Components\DIContainer;
 
 use Alpha\Contracts\DIContainerInterface;
-use Alpha\Http\Exception\RuntimeException;
+use ReflectionFunction;
 use ReflectionMethod;
+use RuntimeException;
 
 include 'functions.php';
 
@@ -14,6 +15,11 @@ class DIContainer implements DIContainerInterface
     private static self $instance;
 
     private function __construct(private array $config) { }
+
+    public function __clone(): void
+    {
+        throw new RuntimeException('Клонирование запрещено!');
+    }
 
     public static function getInstance(array $config = []): self
     {
@@ -30,21 +36,21 @@ class DIContainer implements DIContainerInterface
 
         $parameters = $constructor->getParameters();
 
-        $dependences = [];
+        $dependencies = [];
 
         foreach ($parameters as $parameter) {
             $dependenceType = (string) $parameter->getType();
 
             if (isset($this->container[$dependenceType])) {
-                $dependences[] = $this->container[$dependenceType];
+                $dependencies[] = $this->container[$dependenceType];
 
                 continue;
             }
 
-            $dependences[] = $this->build($this->config[$dependenceType]);
+            $dependencies[] = $this->build($this->config[$dependenceType]);
         }
 
-        return new $className(...$dependences);
+        return new $className(...$dependencies);
     }
 
     public function make(string $interfaceName): object
@@ -64,8 +70,46 @@ class DIContainer implements DIContainerInterface
         $this->container[$contract] = $dependence;
     }
 
-    public function __clone(): void
+    public function call(string|callable $handler, string|null $method = null, array $params = []): mixed
     {
-        throw new RuntimeException('Клонирование запрещено!');
+        if (is_string($handler) && empty($method) === true) {
+            throw new \InvalidArgumentException("При вызове метода класса {$handler}, необходимо передать имя метода");
+        }
+
+        $reflection = is_callable($handler) ? new ReflectionFunction($handler) : new ReflectionMethod($handler, $method);
+
+        $parameters = $reflection->getParameters();
+
+        $arguments = [];
+
+        foreach ($parameters as $parameter) {
+            $typeDependency = $parameter->getType();
+
+            if ((empty($typeDependency) === false && $typeDependency->isBuiltin() === true) || empty($typeDependency) === true) {
+                $paramExists = in_array($parameter->getName(), array_keys($params));
+
+                if ($typeDependency->allowsNull() === false && $paramExists === false) {
+                    throw new \InvalidArgumentException('отсутствуют обязательные аргументы: ' . $parameter->getName());
+                }
+
+                if ($paramExists === true) {
+                    $arguments[] = $params[$parameter->getName()];
+                }
+
+                if ($parameter->isDefaultValueAvailable()=== true && $paramExists === false) {
+                    $arguments[] = $parameter->getDefaultValue();
+                }
+            }
+
+            if ((empty($typeDependency) === false && $typeDependency->isBuiltin() === false)) {
+                $arguments[] = $this->build($this->config[$typeDependency->getName()]);
+            }
+        }
+
+        if (is_callable($handler)) {
+            return $handler(...$arguments);
+        }
+
+        return $this->build($handler)->{$method}(...$arguments);
     }
 }
