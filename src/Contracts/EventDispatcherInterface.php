@@ -7,8 +7,6 @@ use Alpha\Components\EventDispatcher\Message;
 
 interface EventDispatcherInterface
 {
-    function __construct();
-
     function attach($event, ObserverInterface $observer): void;
     function detach($event): void;
     function notify($event, Message $message): void;
