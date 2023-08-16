@@ -43,7 +43,7 @@ class ConsoleInput implements ConsoleInputInterface
 
         if ($this->hasOption('--interactive') === true) {
             foreach ($this->definition->arguments as $key => $value) {
-                $default = empty($value['default']) === false ? " [{$value['default']}]" : '';
+                $default = empty($value['default']) === false ? "[{$value['default']}]" : '';
 
                 $this->arguments[$key] = $this->getInput($key, "Введите $key ({$value["description"]}) $default:");
             }
@@ -81,11 +81,15 @@ class ConsoleInput implements ConsoleInputInterface
 
     public function getArgument(string $argument): mixed
     {
-        if (empty($this->arguments[$argument] === false)) {
-            return $this->arguments[$argument];
+        if (empty($this->arguments[$argument]) === true) {
+            return false;
         }
 
-        return false;
+        if (is_numeric($this->arguments[$argument])) {
+            return (int)$this->arguments[$argument];
+        }
+
+        return $this->arguments[$argument];
     }
 
     public function hasArgument(string $argument): bool
@@ -93,10 +97,10 @@ class ConsoleInput implements ConsoleInputInterface
         return empty($this->arguments[$argument]) === false;
     }
 
-    public function getInput(string $argumentName, string $prompt): int
+    public function getInput(string $argumentName, string $prompt): mixed
     {
         if ($this->hasArgument($argumentName) === true) {
-            $value = (int)$this->getArgument($argumentName);
+            $value = $this->getArgument($argumentName);
             echo "$prompt [$value]" . PHP_EOL;
 
             $handle = fopen("php://stdin", "r");
