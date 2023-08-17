@@ -70,8 +70,9 @@ class InfoCommand implements ConsoleCommandInterface
         $arguments = $definition->arguments;
         $options = $definition->options;
 
+        $this->output->stdout("\033[34mОбщие опции:\033[0m" . PHP_EOL);
         foreach ($this->commonProperty as $property => $description) {
-            $this->output->stdout("\033[34mОбщие опции:\033[0m" . PHP_EOL . "\033[32m".$property ."\033[0m". " : ". $description. PHP_EOL);
+            $this->output->stdout( "\033[32m".$property ."\033[0m". " : ". $description. PHP_EOL);
         }
 
         $this->output->stdout(PHP_EOL);
