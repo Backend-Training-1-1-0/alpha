@@ -6,9 +6,12 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.4.0](https://github.com/EFKO-CR/alpha/releases/tag/0.4.0) ] - 17.08.2023
+
 - Реализовано:
   - Передача зависимсостей объявленных как аргументов метода через DIContainer
   - В выводе CLI добавлено описание общие свойства
+  - Проверка аргументов на is_numeric
 
 ## [ [0.3.0](https://github.com/EFKO-CR/alpha/releases/tag/0.3.0) ] - 11.08.2023
 

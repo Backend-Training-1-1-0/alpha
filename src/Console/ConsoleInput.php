@@ -43,7 +43,7 @@ class ConsoleInput implements ConsoleInputInterface
 
         if ($this->hasOption('--interactive') === true) {
             foreach ($this->definition->arguments as $key => $value) {
-                $default = empty($value['default']) === false ? " [{$value['default']}]" : '';
+                $default = empty($value['default']) === false ? "[{$value['default']}]" : '';
 
                 $this->arguments[$key] = $this->getInput($key, "Введите $key ({$value["description"]}) $default:");
             }
@@ -81,11 +81,13 @@ class ConsoleInput implements ConsoleInputInterface
 
     public function getArgument(string $argument): mixed
     {
-        if (empty($this->arguments[$argument] === false)) {
-            return $this->arguments[$argument];
+        if (empty($this->arguments[$argument]) === true) {
+            return false;
         }
 
-        return false;
+        return is_numeric($this->arguments[$argument])
+            ? (int)$this->arguments[$argument]
+            : $this->arguments[$argument];
     }
 
     public function hasArgument(string $argument): bool
@@ -93,33 +95,17 @@ class ConsoleInput implements ConsoleInputInterface
         return empty($this->arguments[$argument]) === false;
     }
 
-    public function getInput(string $argumentName, string $prompt): int
+    public function getInput(string $argumentName, string $prompt): mixed
     {
-        if ($this->hasArgument($argumentName) === true) {
-            $value = (int)$this->getArgument($argumentName);
-            echo "$prompt [$value]" . PHP_EOL;
-
-            $handle = fopen("php://stdin", "r");
-            trim(fgets($handle));
-            fclose($handle);
-
-            return $value;
-        }
-
         echo "$prompt" . PHP_EOL;
-        $handle = fopen("php://stdin", "r");
-        $value = trim(fgets($handle));
-        fclose($handle);
 
-        return $value;
+        return trim(fgets(STDIN));
     }
 
     public function askForApproval(string $key, array $value): void
     {
         echo "Применить опцию $key? ({$value["description"]}) [да] да/нет" . PHP_EOL;
-        $handle = fopen("php://stdin", "r");
-        $approval = trim(fgets($handle));
-        fclose($handle);
+        $approval = trim(fgets(STDIN));
 
         if ($approval === '' || $approval === 'да') {
             $this->options[] = $key;
