@@ -81,6 +81,10 @@ class ConsoleInput implements ConsoleInputInterface
 
     public function getArgument(string $argument): mixed
     {
+        if (empty($this->arguments[$argument]) === true) {
+            return false;
+        }
+
         return is_numeric($this->arguments[$argument])
             ? (int)$this->arguments[$argument]
             : $this->arguments[$argument];
@@ -93,15 +97,6 @@ class ConsoleInput implements ConsoleInputInterface
 
     public function getInput(string $argumentName, string $prompt): mixed
     {
-        if ($this->hasArgument($argumentName) === true) {
-            $value = $this->getArgument($argumentName);
-            echo "$prompt [$value]" . PHP_EOL;
-
-            trim(fgets(STDIN));
-
-            return $value;
-        }
-
         echo "$prompt" . PHP_EOL;
 
         return trim(fgets(STDIN));
