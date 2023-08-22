@@ -8,5 +8,5 @@ interface DIContainerInterface
     function build(string $className): object;
     function make(string $interfaceName): object;
     function register(string $contract, object $dependence): void;
-    function call(string|callable $handler, string|null $method = null, array $params = []): mixed;
+    function call(string|callable $handler, string|null $method = null, array $defaultArgs = []): mixed;
 }
