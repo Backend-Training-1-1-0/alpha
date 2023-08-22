@@ -10,6 +10,7 @@ class CommandDefinition
 
     public function __construct(
         private readonly string $signature,
+        public readonly string $description = '',
     )
     {
         $this->prepareSignature();

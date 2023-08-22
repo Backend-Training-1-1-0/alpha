@@ -2,6 +2,7 @@
 
 namespace Alpha\Console;
 
+use Alpha\Console\Components\CommandInfoService;
 use Alpha\Contracts\ConsoleCommandInterface;
 use Alpha\Contracts\ConsoleInputInterface;
 
@@ -17,7 +18,10 @@ class ConsoleInput implements ConsoleInputInterface
     {
         $this->arguments = [];
         $this->options = [];
-        $this->definition = new CommandDefinition($command::getSignature());
+        $this->definition = new CommandDefinition(
+            $command::getSignature(),
+            $command::getDescription()
+        );
 
         $this->parse();
         $this->validate();
@@ -39,6 +43,14 @@ class ConsoleInput implements ConsoleInputInterface
             if (str_contains($value, '--') === true) {
                 $this->options[] = $value;
             }
+        }
+
+        if ($this->hasOption('--help') === true) {
+            /** @var CommandInfoService $infoService */
+            $infoService = container()->build(CommandInfoService::class);
+            $infoService->setDefinition($this->definition);
+            $infoService->printCommandInfo();
+            die;
         }
 
         if ($this->hasOption('--interactive') === true) {
