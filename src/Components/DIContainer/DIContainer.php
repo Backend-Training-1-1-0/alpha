@@ -70,7 +70,7 @@ class DIContainer implements DIContainerInterface
         $this->container[$contract] = $dependence;
     }
 
-    public function call(string|callable $handler, string|null $method = null, array $params = []): mixed
+    public function call(string|callable|object $handler, string|null $method = null, array $defaultArgs = []): mixed
     {
         if (is_string($handler) && empty($method) === true) {
             throw new \InvalidArgumentException("При вызове метода класса {$handler}, необходимо передать имя метода");
@@ -83,31 +83,25 @@ class DIContainer implements DIContainerInterface
         $arguments = [];
 
         foreach ($parameters as $parameter) {
-            $typeDependency = $parameter->getType();
-
-            if ((empty($typeDependency) === false && $typeDependency->isBuiltin() === true) || empty($typeDependency) === true) {
-                $paramExists = in_array($parameter->getName(), array_keys($params));
-
-                if ($typeDependency->allowsNull() === false && $paramExists === false) {
-                    throw new \InvalidArgumentException('отсутствуют обязательные аргументы: ' . $parameter->getName());
-                }
-
-                if ($paramExists === true) {
-                    $arguments[] = $params[$parameter->getName()];
-                }
-
-                if ($parameter->isDefaultValueAvailable()=== true && $paramExists === false) {
-                    $arguments[] = $parameter->getDefaultValue();
-                }
+            if (empty($parameter->getType()) === true) {
+                continue;
             }
 
-            if ((empty($typeDependency) === false && $typeDependency->isBuiltin() === false)) {
-                $arguments[] = $this->build($this->config[$typeDependency->getName()]);
+            if ($parameter->getType()->isBuiltin() === true) {
+                continue;
             }
+
+            $arguments[] = $this->build($this->config[$parameter->getType()->getName()]);
         }
+
+        $arguments = array_merge($defaultArgs, $arguments);
 
         if (is_callable($handler)) {
             return $handler(...$arguments);
+        }
+
+        if (is_object($handler)) {
+            $handler->{$method}(...$arguments);
         }
 
         return $this->build($handler)->{$method}(...$arguments);
