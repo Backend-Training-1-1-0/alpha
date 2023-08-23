@@ -12,10 +12,10 @@ class CommandDefinition
         private readonly string $signature,
     )
     {
-        $this->prepareSignature();
+        $this->initDefinitions();
     }
 
-    private function prepareSignature(): void
+    private function initDefinitions(): void
     {
         preg_match('/^([^{\s]+)/u', $this->signature, $matches);
         $this->commandName = $matches[1];
@@ -23,36 +23,45 @@ class CommandDefinition
         preg_match_all('/{([^}]+)}/u', $this->signature, $matches);
 
         foreach ($matches[1] as $prepareString) {
-            $isRequired = true;
-            $defaultValue = null;
-
             $parts = explode(':', $prepareString);
             $name = isset($parts[0]) ? trim($parts[0]) : '';
             $description = isset($parts[1]) ? trim($parts[1]) : '';
 
             if (str_starts_with($name, '?')) {
                 $name = substr($name, 1);
-                $isRequired = false;
             }
 
             if (str_contains($name, '--')) {
-                $this->options[$name] = [
-                    'description' => $description,
-                ];
+                $this->initOption($name, $description);
 
                 continue;
             }
 
-            if (substr_count($name, "=") === 1 && str_ends_with($name, "=") === false) {
-                $arr = explode("=", $name);
-                $defaultValue = $arr[1];
-                $name = $arr[0];
-            }
+            $this->initArgument($name, $description);
+        }
+    }
 
+    private function initOption(string $name, string $description): void
+    {
+        $this->options[$name] = [
+            'description' => $description,
+        ];
+    }
+
+    private function initArgument(string $name, string $description): void
+    {
+        if (substr_count($name, "=") === 1 && str_ends_with($name, "=") === false) {
+            $arr = explode("=", $name);
+            $this->arguments[$arr[0]] = [
+                'description' => $description,
+                'required' => false,
+                'default' => $arr[1],
+            ];
+        } else {
             $this->arguments[$name] = [
                 'description' => $description,
-                'required' => $isRequired,
-                'default' => $defaultValue,
+                'required' => true,
+                'default' => null,
             ];
         }
     }
