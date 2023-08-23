@@ -49,6 +49,9 @@ class CommandInfoService
 
         $this->output->stdout("Опции:" . PHP_EOL, 'info');
         foreach ($this->definition->options as $name => $optionData) {
+            if (isset($optionData['isHidden']) && $optionData['isHidden'] === true) {
+                continue;
+            }
             $this->output->stdout( '    ' . $name, 'success');
             $this->output->stdout( ' ' . $optionData['description'] . PHP_EOL);
         }

@@ -26,6 +26,7 @@ class ConsoleInput implements ConsoleInputInterface
         $this->parse();
         $this->validate();
         $this->setDefaults();
+        $this->executeCommonOptions();
     }
 
     private function parse(): void
@@ -44,7 +45,10 @@ class ConsoleInput implements ConsoleInputInterface
                 $this->options[] = $value;
             }
         }
+    }
 
+    private function executeCommonOptions()
+    {
         if ($this->hasOption('--help') === true) {
             /** @var CommandInfoService $infoService */
             $infoService = container()->build(CommandInfoService::class);

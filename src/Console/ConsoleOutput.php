@@ -25,4 +25,19 @@ class ConsoleOutput implements ConsoleOutputInterface
         echo $result;
     }
 
+    public function info(string $result): void
+    {
+        $this->stdout($result, 'info');
+    }
+
+    public function warning(string $result): void
+    {
+        $this->stdout($result, 'warning');
+    }
+
+    public function success(string $result): void
+    {
+        $this->stdout($result, 'success');
+    }
+
 }

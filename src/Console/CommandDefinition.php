@@ -8,12 +8,24 @@ class CommandDefinition
     public array $arguments = [];
     public array $options = [];
 
+    private array $commonOptions = [
+        '--help' => [
+            'description' => 'Вывод информации о команде',
+            'isHidden' => true,
+        ],
+        '--interactive' => [
+            'description' => 'Вызов команды в режиме интерактивного ввода',
+            'isHidden' => true,
+        ]
+    ];
+
     public function __construct(
         private readonly string $signature,
         public readonly string $description = '',
     )
     {
         $this->prepareSignature();
+        $this->options += $this->commonOptions;
     }
 
     private function prepareSignature(): void

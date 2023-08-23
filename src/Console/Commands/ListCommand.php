@@ -14,10 +14,6 @@ class ListCommand implements ConsoleCommandInterface
     private static string $signature = 'info';
     private static string $description = 'Вывод информации о доступных командах';
     private static bool $hidden = true;
-    private array $commonProperty = [
-        '--help' => 'Вывод информации о команде',
-        '--interactive' => 'Вызов команды в режиме интерактивного ввода'
-    ];
 
     public function __construct(
         private readonly ConsoleInputInterface $input,
