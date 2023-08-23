@@ -8,36 +8,24 @@ class ConsoleOutput implements ConsoleOutputInterface
 {
     public function __construct() { }
 
-    public function stdout(string $result, $mode = ''): void
+    public function stdout(string $result): void
     {
-        if ($mode === 'success') {
-            $result = "\033[32m" . $result . "\033[0m";
-        }
-
-        if ($mode === 'info') {
-            $result = "\033[34m" . $result . "\033[0m";
-        }
-
-        if ($mode === 'warning') {
-            $result = "\033[38;5;214m" . $result . "\033[0m";
-        }
-
         echo $result;
     }
 
     public function info(string $result): void
     {
-        $this->stdout($result, 'info');
+        $this->stdout("\033[34m" . $result . "\033[0m");
     }
 
     public function warning(string $result): void
     {
-        $this->stdout($result, 'warning');
+        $this->stdout("\033[38;5;214m" . $result . "\033[0m");
     }
 
     public function success(string $result): void
     {
-        $this->stdout($result, 'success');
+        $this->stdout("\033[32m" . $result . "\033[0m");
     }
 
 }

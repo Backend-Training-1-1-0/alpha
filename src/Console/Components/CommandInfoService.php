@@ -23,17 +23,17 @@ class CommandInfoService
         $argsString = '{' . implode('}{', array_keys($this->definition->arguments)) . '}';
 
         $optionsString =  $this->definition->options === [] ? '' : '[опции]';
-        $this->output->stdout("Вызов:" . PHP_EOL , 'info');
+        $this->output->info("Вызов:" . PHP_EOL);
         $this->output->stdout("    " .
             $this->definition->commandName . " " .
             $argsString . ' ' .
             $optionsString.
             PHP_EOL);
 
-        $this->output->stdout("Назначение:" . PHP_EOL, 'info');
+        $this->output->info("Назначение:" . PHP_EOL);
         $this->output->stdout('    ' . $this->definition->description . PHP_EOL);
 
-        $this->output->stdout("Аргументы:" . PHP_EOL, 'info');
+        $this->output->info("Аргументы:" . PHP_EOL, 'info');
         foreach ($this->definition->arguments as $name => $argData) {
             $isRequiredString = $argData['required'] === true ? 'обязательный параметр' : 'необязательный параметр';
 
@@ -43,16 +43,16 @@ class CommandInfoService
                 $descriptionOutput[] = 'значение по умолчанию: ' . $argData['default'];
             }
 
-            $this->output->stdout( '    ' . $name . ' ', 'success');
+            $this->output->success( '    ' . $name . ' ');
             $this->output->stdout(  implode(', ' , $descriptionOutput) . PHP_EOL);
         }
 
-        $this->output->stdout("Опции:" . PHP_EOL, 'info');
+        $this->output->info("Опции:" . PHP_EOL);
         foreach ($this->definition->options as $name => $optionData) {
             if (isset($optionData['isHidden']) && $optionData['isHidden'] === true) {
                 continue;
             }
-            $this->output->stdout( '    ' . $name, 'success');
+            $this->output->success( '    ' . $name);
             $this->output->stdout( ' ' . $optionData['description'] . PHP_EOL);
         }
     }

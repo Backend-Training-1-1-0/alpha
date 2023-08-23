@@ -42,33 +42,33 @@ class ListCommand implements ConsoleCommandInterface
     {
         $commands = $this->kernel->getCommandMap();
 
-        $this->output->stdout("ЭФКО Фреймворк 0.0.1" . PHP_EOL, 'warning');
+        $this->output->warning("ЭФКО Фреймворк 0.0.1" . PHP_EOL);
         $this->output->stdout(PHP_EOL);
-        $this->output->stdout("Фреймворк создан разработчиками компании ЭФКО Цифровые решения." . PHP_EOL, 'warning');
-        $this->output->stdout("Является платформой для изучения базового поведения приложения созданного на PHP." . PHP_EOL , 'warning');
-        $this->output->stdout("Фреймворк не является production-ready реализацией и не предназначен для коммерческого использования" . PHP_EOL , 'warning');
+        $this->output->warning("Фреймворк создан разработчиками компании ЭФКО Цифровые решения." . PHP_EOL);
+        $this->output->warning("Является платформой для изучения базового поведения приложения созданного на PHP." . PHP_EOL);
+        $this->output->warning("Фреймворк не является production-ready реализацией и не предназначен для коммерческого использования" . PHP_EOL);
         $this->output->stdout(  PHP_EOL);
 
-        $this->output->stdout("Доступные опции:" . PHP_EOL, 'success');
+        $this->output->success("Доступные опции:" . PHP_EOL);
         foreach ($this->commonProperty as $property => $propertyDescription) {
-            $this->output->stdout(  '    ' . $property, 'success');
+            $this->output->success(  '    ' . $property );
             $this->output->stdout(   " : ". $propertyDescription. PHP_EOL);
         }
 
         $this->output->stdout(PHP_EOL);
 
-        $this->output->stdout("Вызов:" . PHP_EOL, 'success');
+        $this->output->success("Вызов:" . PHP_EOL);
         $this->output->stdout('    ' . 'команда [аргументы] [опции]');
 
         $this->output->stdout(PHP_EOL . PHP_EOL);
 
-        $this->output->stdout("Доступные команды:" . PHP_EOL, 'success');
+        $this->output->success("Доступные команды:" . PHP_EOL);
 
         foreach ($commands as $key => $command) {
             if ((bool) $command['isHidden'] === true) {
                 continue;
             }
-            $this->output->stdout('    ' . $key, 'success');
+            $this->output->success('    ' . $key, );
             $this->output->stdout(" - {$command['description']}" . PHP_EOL);
         }
     }
