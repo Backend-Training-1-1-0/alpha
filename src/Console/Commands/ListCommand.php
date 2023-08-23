@@ -2,6 +2,7 @@
 
 namespace Alpha\Console\Commands;
 
+use Alpha\Console\CommandDefinition;
 use Alpha\Contracts\{
     ConsoleCommandInterface,
     ConsoleInputInterface,
@@ -50,9 +51,12 @@ class ListCommand implements ConsoleCommandInterface
         $this->output->stdout(  PHP_EOL);
 
         $this->output->success("Доступные опции:" . PHP_EOL);
-        foreach ($this->commonProperty as $property => $propertyDescription) {
+
+        $definition = new CommandDefinition(self::getSignature());
+
+        foreach ($definition->getCommonOptions() as $property => $propertyData) {
             $this->output->success(  '    ' . $property );
-            $this->output->stdout(   " : ". $propertyDescription. PHP_EOL);
+            $this->output->stdout(   " : ". $propertyData['description'] . PHP_EOL);
         }
 
         $this->output->stdout(PHP_EOL);

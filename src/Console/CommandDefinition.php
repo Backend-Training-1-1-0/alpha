@@ -28,6 +28,10 @@ class CommandDefinition
         $this->options += $this->commonOptions;
     }
 
+    public function getCommonOptions() :array
+    {
+        return $this->commonOptions;
+    }
     private function prepareSignature(): void
     {
         preg_match('/^([^{\s]+)/u', $this->signature, $matches);
