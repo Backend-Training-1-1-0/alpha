@@ -2,6 +2,7 @@
 
 namespace Alpha\Console;
 
+use Alpha\Console\Components\CommandInfoService;
 use Alpha\Contracts\ConsoleCommandInterface;
 use Alpha\Contracts\ConsoleInputInterface;
 
@@ -21,11 +22,15 @@ class ConsoleInput implements ConsoleInputInterface
     {
         $this->arguments = [];
         $this->options = [];
-        $this->definition = new CommandDefinition($command::getSignature());
+        $this->definition = new CommandDefinition(
+            $command::getSignature(),
+            $command::getDescription()
+        );
 
         $this->parse();
         $this->validate();
         $this->setDefaults();
+        $this->executeCommonOptions();
     }
 
     private function parse(): void
@@ -54,6 +59,29 @@ class ConsoleInput implements ConsoleInputInterface
             }
 
             foreach ($this->definition->getOptions() as $key => $value) {
+                $this->askForApproval($key, $value);
+            }
+        }
+    }
+
+    private function executeCommonOptions()
+    {
+        if ($this->hasOption('--help') === true || $this->hasOption('--h')=== true) {
+            /** @var CommandInfoService $infoService */
+            $infoService = container()->build(CommandInfoService::class);
+            $infoService->setDefinition($this->definition);
+            $infoService->printCommandInfo();
+            die;
+        }
+
+        if ($this->hasOption('--interactive') === true || $this->hasOption('--na') === true) {
+            foreach ($this->definition->arguments as $key => $value) {
+                $default = empty($value['default']) === false ? "[{$value['default']}]" : '';
+
+                $this->arguments[$key] = $this->getInput($key, "Введите $key ({$value["description"]}) $default:");
+            }
+
+            foreach ($this->definition->options as $key => $value) {
                 $this->askForApproval($key, $value);
             }
         }
