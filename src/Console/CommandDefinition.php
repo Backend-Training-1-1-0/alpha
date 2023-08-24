@@ -4,15 +4,30 @@ namespace Alpha\Console;
 
 class CommandDefinition
 {
-    public string $commandName = '';
-    public array $arguments = [];
-    public array $options = [];
+    private string $commandName = '';
+    private array $arguments = [];
+    private array $options = [];
 
     public function __construct(
         private readonly string $signature,
     )
     {
         $this->initDefinitions();
+    }
+
+    public function getCommandName(): string
+    {
+        return $this->commandName;
+    }
+
+    public function getArguments(): array
+    {
+        return $this->arguments;
+    }
+
+    public function getOptions(): array
+    {
+        return $this->options;
     }
 
     private function initDefinitions(): void

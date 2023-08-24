@@ -9,7 +9,7 @@ class ConsoleInput implements ConsoleInputInterface
 {
     public array $arguments = [];
     public array $options = [];
-    public CommandDefinition $definition;
+    private readonly CommandDefinition $definition;
     private array $tokens = [];
 
     public function __construct()
@@ -30,7 +30,7 @@ class ConsoleInput implements ConsoleInputInterface
 
     private function parse(): void
     {
-        $listKeys = array_keys($this->definition->arguments);
+        $listKeys = array_keys($this->definition->getArguments());
 
         foreach ($this->tokens as $key => $value) {
             if (str_contains($value, '--') === false) {
@@ -47,13 +47,13 @@ class ConsoleInput implements ConsoleInputInterface
         $this->validateOptions();
 
         if ($this->hasOption('--interactive') === true) {
-            foreach ($this->definition->arguments as $key => $value) {
+            foreach ($this->definition->getArguments() as $key => $value) {
                 $default = empty($value['default']) === false ? "[{$value['default']}]" : '';
 
                 $this->arguments[$key] = $this->getInput($key, "Введите $key ({$value["description"]}) $default:");
             }
 
-            foreach ($this->definition->options as $key => $value) {
+            foreach ($this->definition->getOptions() as $key => $value) {
                 $this->askForApproval($key, $value);
             }
         }
@@ -61,7 +61,7 @@ class ConsoleInput implements ConsoleInputInterface
 
     private function validate(): void
     {
-        foreach ($this->definition->arguments as $paramName => $paramProperties) {
+        foreach ($this->definition->getArguments() as $paramName => $paramProperties) {
             $isExists = in_array($paramName, array_keys($this->arguments));
 
             if ($paramProperties['required'] === true && $isExists === false) {
@@ -72,7 +72,7 @@ class ConsoleInput implements ConsoleInputInterface
 
     private function setDefaults(): void
     {
-        foreach ($this->definition->arguments as $paramName => $paramProperties) {
+        foreach ($this->definition->getArguments() as $paramName => $paramProperties) {
             if (empty($this->arguments[$paramName]) === true && $paramProperties['default'] !== null) {
                 $this->arguments[$paramName] = $paramProperties['default'];
             }
@@ -117,7 +117,7 @@ class ConsoleInput implements ConsoleInputInterface
 
     private function validateOptions(): void
     {
-        $optionsNames = array_keys($this->definition->options);
+        $optionsNames = array_keys($this->definition->getOptions());
         foreach ($this->options as $option) {
             if (in_array($option, $optionsNames) === false && $this->hasOption('--interactive') === false) {
                 throw new \InvalidArgumentException('Введена несуществующая опция ' . $option);

@@ -58,7 +58,7 @@ class InfoCommand implements ConsoleCommandInterface
             $description = $namespaceCommand::$description;
         }
 
-        $commandName = $definition->commandName;
+        $commandName = $definition->getCommandName();
         $this->output->stdout("\033[34mЭФКО Фреймворк 0.0.1\033[0m" . PHP_EOL);
         $this->output->stdout("\033[34mЭФКО Фреймворк 0.0.1\033[0m" . PHP_EOL);
         $this->output->stdout(PHP_EOL);
@@ -67,8 +67,8 @@ class InfoCommand implements ConsoleCommandInterface
         $this->output->stdout("\033[33mФреймворк не является production-ready реализацией и не предназначен для коммерческого использования\033[0m" . PHP_EOL); //желтый
         $this->output->stdout(  PHP_EOL);
 
-        $arguments = $definition->arguments;
-        $options = $definition->options;
+        $arguments = $definition->getArguments();
+        $options = $definition->getOptions();
 
         $this->output->stdout("\033[34mОбщие опции:\033[0m" . PHP_EOL);
         foreach ($this->commonProperty as $property => $description) {
