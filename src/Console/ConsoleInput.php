@@ -10,8 +10,12 @@ class ConsoleInput implements ConsoleInputInterface
     public array $arguments = [];
     public array $options = [];
     public CommandDefinition $definition;
+    private array $tokens = [];
 
-    public function __construct() { }
+    public function __construct()
+    {
+        $this->tokens = array_slice($_SERVER['argv'], 2);
+    }
 
     public function bindDefinition(ConsoleCommandInterface $command):void
     {
@@ -27,9 +31,8 @@ class ConsoleInput implements ConsoleInputInterface
     private function parse(): void
     {
         $listKeys = array_keys($this->definition->arguments);
-        $params = array_slice($_SERVER['argv'], 2);
 
-        foreach ($params as $key => $value) {
+        foreach ($this->tokens as $key => $value) {
             if (str_contains($value, '--') === false) {
                 $paramName = $listKeys[$key];
 
