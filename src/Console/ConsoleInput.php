@@ -121,7 +121,7 @@ class ConsoleInput implements ConsoleInputInterface
     {
         $optionsNames = array_keys($this->definition->options);
         foreach ($this->options as $option) {
-            if (in_array($option, $optionsNames) === false) {
+            if (in_array($option, $optionsNames) === false && $this->hasOption('--interactive') === false) {
                 throw new \InvalidArgumentException('Введена несуществующая опция ' . $option);
             }
         }
