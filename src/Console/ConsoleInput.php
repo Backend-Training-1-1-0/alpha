@@ -36,7 +36,9 @@ class ConsoleInput implements ConsoleInputInterface
             if (str_contains($value, '--') === false) {
                 $paramName = $listKeys[$key];
 
-                $this->arguments[$paramName] = $value;
+                $this->arguments[$paramName] = is_numeric($this->arguments[$key])
+                    ? (int)$this->arguments[$key]
+                    : $this->arguments[$key];
             }
 
             if (str_contains($value, '--') === true) {
@@ -90,9 +92,7 @@ class ConsoleInput implements ConsoleInputInterface
             return false;
         }
 
-        return is_numeric($this->arguments[$argument])
-            ? (int)$this->arguments[$argument]
-            : $this->arguments[$argument];
+        return $this->arguments[$argument];
     }
 
     public function hasArgument(string $argument): bool
