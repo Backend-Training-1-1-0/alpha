@@ -36,9 +36,7 @@ class ConsoleInput implements ConsoleInputInterface
             if (str_contains($value, '--') === false) {
                 $paramName = $listKeys[$key];
 
-                $this->arguments[$paramName] = is_numeric($this->arguments[$key])
-                    ? (int)$this->arguments[$key]
-                    : $this->arguments[$key];
+                $this->arguments[$paramName] = is_numeric($value) ? (int)$value : $value;
             }
 
             if (str_contains($value, '--') === true) {
