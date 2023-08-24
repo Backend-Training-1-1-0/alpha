@@ -10,9 +10,13 @@ class ConsoleInput implements ConsoleInputInterface
 {
     public array $arguments = [];
     public array $options = [];
-    public CommandDefinition $definition;
+    private readonly CommandDefinition $definition;
+    private array $tokens = [];
 
-    public function __construct() { }
+    public function __construct()
+    {
+        $this->tokens = array_slice($_SERVER['argv'], 2);
+    }
 
     public function bindDefinition(ConsoleCommandInterface $command):void
     {
@@ -31,14 +35,13 @@ class ConsoleInput implements ConsoleInputInterface
 
     private function parse(): void
     {
-        $listKeys = array_keys($this->definition->arguments);
-        $params = array_slice($_SERVER['argv'], 2);
+        $listKeys = array_keys($this->definition->getArguments());
 
-        foreach ($params as $key => $value) {
+        foreach ($this->tokens as $key => $value) {
             if (str_contains($value, '--') === false) {
                 $paramName = $listKeys[$key];
 
-                $this->arguments[$paramName] = $value;
+                $this->arguments[$paramName] = is_numeric($value) ? (int)$value : $value;
             }
 
             if (str_contains($value, '--') === true) {
@@ -49,6 +52,7 @@ class ConsoleInput implements ConsoleInputInterface
 
     private function executeCommonOptions()
     {
+        $this->validateOptions();
         if ($this->hasOption('--help') === true || $this->hasOption('--h')=== true) {
             /** @var CommandInfoService $infoService */
             $infoService = container()->build(CommandInfoService::class);
@@ -58,13 +62,13 @@ class ConsoleInput implements ConsoleInputInterface
         }
 
         if ($this->hasOption('--interactive') === true || $this->hasOption('--na') === true) {
-            foreach ($this->definition->arguments as $key => $value) {
+            foreach ($this->definition->getArguments() as $key => $value) {
                 $default = empty($value['default']) === false ? "[{$value['default']}]" : '';
 
                 $this->arguments[$key] = $this->getInput($key, "Введите $key ({$value["description"]}) $default:");
             }
 
-            foreach ($this->definition->options as $key => $value) {
+            foreach ($this->definition->getOptions() as $key => $value) {
                 $this->askForApproval($key, $value);
             }
         }
@@ -72,7 +76,7 @@ class ConsoleInput implements ConsoleInputInterface
 
     private function validate(): void
     {
-        foreach ($this->definition->arguments as $paramName => $paramProperties) {
+        foreach ($this->definition->getArguments() as $paramName => $paramProperties) {
             $isExists = in_array($paramName, array_keys($this->arguments));
 
             if ($paramProperties['required'] === true && $isExists === false) {
@@ -83,7 +87,7 @@ class ConsoleInput implements ConsoleInputInterface
 
     private function setDefaults(): void
     {
-        foreach ($this->definition->arguments as $paramName => $paramProperties) {
+        foreach ($this->definition->getArguments() as $paramName => $paramProperties) {
             if (empty($this->arguments[$paramName]) === true && $paramProperties['default'] !== null) {
                 $this->arguments[$paramName] = $paramProperties['default'];
             }
@@ -101,9 +105,7 @@ class ConsoleInput implements ConsoleInputInterface
             return false;
         }
 
-        return is_numeric($this->arguments[$argument])
-            ? (int)$this->arguments[$argument]
-            : $this->arguments[$argument];
+        return $this->arguments[$argument];
     }
 
     public function hasArgument(string $argument): bool
@@ -125,6 +127,25 @@ class ConsoleInput implements ConsoleInputInterface
 
         if ($approval === '' || $approval === 'да') {
             $this->options[] = $key;
+        }
+    }
+
+    private function validateOptions(): void
+    {
+        $optionsNames = array_keys($this->definition->getOptions());
+        foreach ($this->options as $option) {
+            if (
+                in_array($option, $optionsNames) === false &&
+                (
+                    $this->hasOption('--interactive') === false ||
+                    $this->hasOption('--na') === false ||
+                    $this->hasOption('--help') === false ||
+                    $this->hasOption('--h')=== false
+
+                )
+            ) {
+                throw new \InvalidArgumentException('Введена несуществующая опция ' . $option);
+            }
         }
     }
 }
