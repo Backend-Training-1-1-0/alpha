@@ -48,24 +48,11 @@ class ConsoleInput implements ConsoleInputInterface
                 $this->options[] = $value;
             }
         }
-
-        $this->validateOptions();
-
-        if ($this->hasOption('--interactive') === true) {
-            foreach ($this->definition->getArguments() as $key => $value) {
-                $default = empty($value['default']) === false ? "[{$value['default']}]" : '';
-
-                $this->arguments[$key] = $this->getInput($key, "Введите $key ({$value["description"]}) $default:");
-            }
-
-            foreach ($this->definition->getOptions() as $key => $value) {
-                $this->askForApproval($key, $value);
-            }
-        }
     }
 
     private function executeCommonOptions()
     {
+        $this->validateOptions();
         if ($this->hasOption('--help') === true || $this->hasOption('--h')=== true) {
             /** @var CommandInfoService $infoService */
             $infoService = container()->build(CommandInfoService::class);
@@ -75,13 +62,13 @@ class ConsoleInput implements ConsoleInputInterface
         }
 
         if ($this->hasOption('--interactive') === true || $this->hasOption('--na') === true) {
-            foreach ($this->definition->arguments as $key => $value) {
+            foreach ($this->definition->getArguments() as $key => $value) {
                 $default = empty($value['default']) === false ? "[{$value['default']}]" : '';
 
                 $this->arguments[$key] = $this->getInput($key, "Введите $key ({$value["description"]}) $default:");
             }
 
-            foreach ($this->definition->options as $key => $value) {
+            foreach ($this->definition->getOptions() as $key => $value) {
                 $this->askForApproval($key, $value);
             }
         }
@@ -147,7 +134,16 @@ class ConsoleInput implements ConsoleInputInterface
     {
         $optionsNames = array_keys($this->definition->getOptions());
         foreach ($this->options as $option) {
-            if (in_array($option, $optionsNames) === false && $this->hasOption('--interactive') === false) {
+            if (
+                in_array($option, $optionsNames) === false &&
+                (
+                    $this->hasOption('--interactive') === false ||
+                    $this->hasOption('--na') === false ||
+                    $this->hasOption('--help') === false ||
+                    $this->hasOption('--h')=== false
+
+                )
+            ) {
                 throw new \InvalidArgumentException('Введена несуществующая опция ' . $option);
             }
         }

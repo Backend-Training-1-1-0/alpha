@@ -20,12 +20,12 @@ class CommandInfoService
     }
     public function printCommandInfo()
     {
-        $argsString = '{' . implode('}{', array_keys($this->definition->arguments)) . '}';
+        $argsString = '{' . implode('}{', array_keys($this->definition->getArguments())) . '}';
 
-        $optionsString =  $this->definition->options === [] ? '' : '[опции]';
+        $optionsString =  $this->definition->getOptions() === [] ? '' : '[опции]';
         $this->output->info("Вызов:" . PHP_EOL);
         $this->output->stdout("    " .
-            $this->definition->commandName . " " .
+            $this->definition->getCommandName() . " " .
             $argsString . ' ' .
             $optionsString.
             PHP_EOL);
@@ -34,7 +34,7 @@ class CommandInfoService
         $this->output->stdout('    ' . $this->definition->description . PHP_EOL);
 
         $this->output->info("Аргументы:" . PHP_EOL, 'info');
-        foreach ($this->definition->arguments as $name => $argData) {
+        foreach ($this->definition->getArguments() as $name => $argData) {
             $isRequiredString = $argData['required'] === true ? 'обязательный параметр' : 'необязательный параметр';
 
             $descriptionOutput = [  $argData['description'], $isRequiredString];
@@ -48,7 +48,7 @@ class CommandInfoService
         }
 
         $this->output->info("Опции:" . PHP_EOL);
-        foreach ($this->definition->options as $name => $optionData) {
+        foreach ($this->definition->getOptions() as $name => $optionData) {
             if (isset($optionData['isHidden']) && $optionData['isHidden'] === true) {
                 continue;
             }
