@@ -49,7 +49,7 @@ class ConsoleInput implements ConsoleInputInterface
 
     private function executeCommonOptions()
     {
-        if ($this->hasOption('--help') === true) {
+        if ($this->hasOption('--help') === true || $this->hasOption('--h')=== true) {
             /** @var CommandInfoService $infoService */
             $infoService = container()->build(CommandInfoService::class);
             $infoService->setDefinition($this->definition);
@@ -57,7 +57,7 @@ class ConsoleInput implements ConsoleInputInterface
             die;
         }
 
-        if ($this->hasOption('--interactive') === true) {
+        if ($this->hasOption('--interactive') === true || $this->hasOption('--na') === true) {
             foreach ($this->definition->arguments as $key => $value) {
                 $default = empty($value['default']) === false ? "[{$value['default']}]" : '';
 
