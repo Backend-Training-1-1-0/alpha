@@ -41,6 +41,8 @@ class ConsoleInput implements ConsoleInputInterface
             }
         }
 
+        $this->validateOptions();
+
         if ($this->hasOption('--interactive') === true) {
             foreach ($this->definition->arguments as $key => $value) {
                 $default = empty($value['default']) === false ? "[{$value['default']}]" : '';
@@ -109,6 +111,16 @@ class ConsoleInput implements ConsoleInputInterface
 
         if ($approval === '' || $approval === 'да') {
             $this->options[] = $key;
+        }
+    }
+
+    private function validateOptions(): void
+    {
+        $optionsNames = array_keys($this->definition->options);
+        foreach ($this->options as $option) {
+            if (in_array($option, $optionsNames) === false) {
+                throw new \InvalidArgumentException('Введена несуществующая опция ' . $option);
+            }
         }
     }
 }
