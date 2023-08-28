@@ -3,10 +3,11 @@
 namespace Alpha\Components\DatabaseConnection;
 
 use Exception;
+use PDO;
 
 class СonnectionFactory
 {
-    public static function createConnection($config)
+    public static function make(array $config): PDO
     {
         $driver = $config['driver'];
 
