@@ -57,12 +57,8 @@ class CommandDefinition
 
         foreach ($matches[1] as $prepareString) {
             $parts = explode(':', $prepareString);
-            $name = isset($parts[0]) ? trim($parts[0]) : '';
+            $name = ltrim(trim($parts[0] ?? ''), '?');
             $description = isset($parts[1]) ? trim($parts[1]) : '';
-
-            if (str_starts_with($name, '?')) {
-                $name = substr($name, 1);
-            }
 
             if (str_contains($name, '--')) {
                 $this->initOption($name, $description);
