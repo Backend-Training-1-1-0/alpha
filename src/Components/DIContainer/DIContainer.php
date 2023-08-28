@@ -70,6 +70,20 @@ class DIContainer implements DIContainerInterface
         $this->container[$contract] = $dependence;
     }
 
+    public function singleton(string $contract, string|callable|object $instance)
+    {
+        if(is_string($instance)) {
+            $instance = new $instance;
+        }
+
+        if(is_callable($instance)) {
+            $instance = $instance();
+        }
+
+        $this->config[$contract] = $instance::class;
+        $this->container[$contract] = $instance;
+    }
+
     public function call(string|callable|object $handler, string|null $method = null, array $defaultArgs = []): mixed
     {
         if (is_string($handler) && empty($method) === true) {
