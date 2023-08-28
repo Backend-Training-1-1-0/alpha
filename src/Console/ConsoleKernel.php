@@ -62,8 +62,15 @@ class ConsoleKernel implements ConsoleKernelInterface
         $handler->execute();
     }
 
-    public function getCommandMap()
+    public function getCommandMap(): array
     {
         return $this->commandMap;
+    }
+
+    public function terminate(): void
+    {
+        echo 'Завершение скрипта';
+
+        exit;
     }
 }

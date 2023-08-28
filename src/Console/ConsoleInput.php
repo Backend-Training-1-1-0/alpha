@@ -2,9 +2,10 @@
 
 namespace Alpha\Console;
 
-use Alpha\Console\Components\CommandInfoService;
-use Alpha\Contracts\ConsoleCommandInterface;
-use Alpha\Contracts\ConsoleInputInterface;
+use Alpha\Contracts\{
+    ConsoleCommandInterface,
+    ConsoleInputInterface,
+};
 
 class ConsoleInput implements ConsoleInputInterface
 {
@@ -12,6 +13,7 @@ class ConsoleInput implements ConsoleInputInterface
     public array $options = [];
     private readonly CommandDefinition $definition;
     private array $tokens = [];
+    private array $plugins = [];
 
     public function __construct()
     {
@@ -28,70 +30,15 @@ class ConsoleInput implements ConsoleInputInterface
         );
 
         $this->parse();
+        $this->executePlugins();
         $this->validate();
-        $this->setDefaults();
-        $this->executeCommonOptions();
-    }
-
-    private function parse(): void
-    {
-        $listKeys = array_keys($this->definition->getArguments());
-
-        foreach ($this->tokens as $key => $value) {
-            if (str_contains($value, '--') === false) {
-                $paramName = $listKeys[$key];
-
-                $this->arguments[$paramName] = is_numeric($value) ? (int)$value : $value;
-            }
-
-            if (str_contains($value, '--') === true) {
-                $this->options[] = $value;
-            }
-        }
-    }
-
-    private function executeCommonOptions()
-    {
         $this->validateOptions();
-        if ($this->hasOption('--help') === true || $this->hasOption('--h')=== true) {
-            /** @var CommandInfoService $infoService */
-            $infoService = container()->build(CommandInfoService::class);
-            $infoService->setDefinition($this->definition);
-            $infoService->printCommandInfo();
-            die;
-        }
-
-        if ($this->hasOption('--interactive') === true || $this->hasOption('--na') === true) {
-            foreach ($this->definition->getArguments() as $key => $value) {
-                $default = empty($value['default']) === false ? "[{$value['default']}]" : '';
-
-                $this->arguments[$key] = $this->getInput($key, "Введите $key ({$value["description"]}) $default:");
-            }
-
-            foreach ($this->definition->getOptions() as $key => $value) {
-                $this->askForApproval($key, $value);
-            }
-        }
+        $this->setDefaults();
     }
 
-    private function validate(): void
+    public function addPlugins(array $plugins): void
     {
-        foreach ($this->definition->getArguments() as $paramName => $paramProperties) {
-            $isExists = in_array($paramName, array_keys($this->arguments));
-
-            if ($paramProperties['required'] === true && $isExists === false) {
-                throw new \InvalidArgumentException('отсутствуют обязательные аргументы: ' . $paramName);
-            }
-        }
-    }
-
-    private function setDefaults(): void
-    {
-        foreach ($this->definition->getArguments() as $paramName => $paramProperties) {
-            if (empty($this->arguments[$paramName]) === true && $paramProperties['default'] !== null) {
-                $this->arguments[$paramName] = $paramProperties['default'];
-            }
-        }
+        $this->plugins = $plugins;
     }
 
     public function hasOption(string $option): bool
@@ -113,20 +60,56 @@ class ConsoleInput implements ConsoleInputInterface
         return empty($this->arguments[$argument]) === false;
     }
 
-    public function getInput(string $argumentName, string $prompt): mixed
+    public function getDefinition(): CommandDefinition
     {
-        echo "$prompt" . PHP_EOL;
-
-        return trim(fgets(STDIN));
+        return $this->definition;
     }
 
-    public function askForApproval(string $key, array $value): void
+    private function parse(): void
     {
-        echo "Применить опцию $key? ({$value["description"]}) [да] да/нет" . PHP_EOL;
-        $approval = trim(fgets(STDIN));
+        $listKeys = array_keys($this->definition->getArguments());
 
-        if ($approval === '' || $approval === 'да') {
-            $this->options[] = $key;
+        foreach ($this->tokens as $key => $value) {
+            if (str_contains($value, '--') === false) {
+                $paramName = $listKeys[$key];
+
+                $this->arguments[$paramName] = is_numeric($value) ? (int)$value : $value;
+            }
+
+            if (str_contains($value, '--') === true) {
+                $this->options[] = $value;
+            }
+        }
+    }
+
+    private function executePlugins()
+    {
+        foreach ($this->plugins as $plugin) {
+            $pluginHandler = container()->build($plugin);
+
+            if ($pluginHandler->isSuitable($this)) {
+                $pluginHandler->handle($this);
+            }
+        }
+    }
+
+    private function validate(): void
+    {
+        foreach ($this->definition->getArguments() as $paramName => $paramProperties) {
+            $isExists = in_array($paramName, array_keys($this->arguments));
+
+            if ($paramProperties['required'] === true && $isExists === false) {
+                throw new \InvalidArgumentException('отсутствуют обязательные аргументы: ' . $paramName);
+            }
+        }
+    }
+
+    private function setDefaults(): void
+    {
+        foreach ($this->definition->getArguments() as $paramName => $paramProperties) {
+            if (empty($this->arguments[$paramName]) === true && $paramProperties['default'] !== null) {
+                $this->arguments[$paramName] = $paramProperties['default'];
+            }
         }
     }
 

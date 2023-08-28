@@ -8,5 +8,6 @@ interface ConsoleKernelInterface
     function addCommandsNamespaces(array $commandsNamespaces): void;
     function addCommand(string $className): void;
     function dispatch(array $argv): void;
-    function getCommandMap();
+    function getCommandMap(): array;
+    function terminate(): void;
 }
