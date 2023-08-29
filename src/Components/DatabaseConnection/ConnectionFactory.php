@@ -4,7 +4,8 @@ namespace Alpha\Components\DatabaseConnection;
 
 use Alpha\Contracts\DatabaseConnectionInterface;
 use Exception;
-use PDO;
+
+include 'functions.php';
 
 class ConnectionFactory
 {
