@@ -49,7 +49,7 @@ class ConsoleInput implements ConsoleInputInterface
     public function getArgument(string $argument): mixed
     {
         if (empty($this->arguments[$argument]) === true) {
-            return false;
+            throw new \InvalidArgumentException('Передан несуществующий аргумент ' . $argument);
         }
 
         return $this->arguments[$argument];
@@ -118,14 +118,7 @@ class ConsoleInput implements ConsoleInputInterface
         $optionsNames = array_keys($this->definition->getOptions());
         foreach ($this->options as $option) {
             if (
-                in_array($option, $optionsNames) === false &&
-                (
-                    $this->hasOption('--interactive') === false ||
-                    $this->hasOption('--na') === false ||
-                    $this->hasOption('--help') === false ||
-                    $this->hasOption('--h')=== false
-
-                )
+                in_array($option, $optionsNames) === false
             ) {
                 throw new \InvalidArgumentException('Введена несуществующая опция ' . $option);
             }
