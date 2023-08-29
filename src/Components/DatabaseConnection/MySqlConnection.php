@@ -3,8 +3,9 @@
 namespace Alpha\Components\DatabaseConnection;
 
 use Alpha\Contracts\DatabaseConnectionInterface;
+use PDO;
 
-class MySqlConnection implements DatabaseConnectionInterface
+class MySqlConnection extends PDO implements DatabaseConnectionInterface
 {
 
     function exec(string $query, array $bindings = []): int

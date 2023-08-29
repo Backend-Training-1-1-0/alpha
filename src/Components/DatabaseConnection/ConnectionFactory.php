@@ -2,12 +2,13 @@
 
 namespace Alpha\Components\DatabaseConnection;
 
+use Alpha\Contracts\DatabaseConnectionInterface;
 use Exception;
 use PDO;
 
-class СonnectionFactory
+class ConnectionFactory
 {
-    public static function make(array $config): PDO
+    public static function make(array $config): DatabaseConnectionInterface
     {
         $driver = $config['driver'];
 

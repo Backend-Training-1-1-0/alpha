@@ -8,13 +8,13 @@ use PDOException;
 
 class MariaDBConnector
 {
-    public function connect(array $config): PDO
+    public function connect(array $config): MySqlConnection
     {
         try {
-            $dsn = "mysql:host={$config['host']};port={$config['port']};"
+            $dsn = "mysql:host={$config['host']};port=3306;"
                 . "dbname={$config['database']};charset={$config['charset']}";
 
-            return new PDO($dsn, $config['username'], $config['password'], [
+            return new MySqlConnection($dsn, $config['username'], $config['password'], [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             ]);
