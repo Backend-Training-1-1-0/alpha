@@ -1,23 +1,36 @@
 <?php
 
-namespace Alpha\Console\Components;
+namespace Alpha\Console\Plugins;
 
 use Alpha\Console\CommandDefinition;
+use Alpha\Console\ConsoleKernel;
+use Alpha\Contracts\ConsoleInputInterface;
+use Alpha\Contracts\ConsoleInputPluginInterface;
 use Alpha\Contracts\ConsoleOutputInterface;
 
-class CommandInfoService
+class CommandHelpOptionPlugin implements ConsoleInputPluginInterface
 {
     private CommandDefinition $definition;
+
     public function __construct(
-        private ConsoleOutputInterface $output
+        private readonly ConsoleOutputInterface $output
     )
     {
     }
 
-    public function setDefinition(CommandDefinition $definition)
+    function isSuitable(ConsoleInputInterface $input): bool
     {
-        $this->definition = $definition;
+        return $input->hasOption('--help') === true || $input->hasOption('--h') === true;
     }
+
+    function handle(ConsoleInputInterface $input): void
+    {
+        $this->definition = $input->getDefinition();
+        $this->printCommandInfo();
+
+        container()->call(ConsoleKernel::class, 'terminate');
+    }
+
     public function printCommandInfo()
     {
         $argsString = '{' . implode('}{', array_keys($this->definition->getArguments())) . '}';

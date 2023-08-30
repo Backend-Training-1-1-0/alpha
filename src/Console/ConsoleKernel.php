@@ -31,9 +31,9 @@ class ConsoleKernel implements ConsoleKernelInterface
 
     public function addCommand(string $className): void
     {
-        $namespaceName = str_replace(['/', '\app\\', 'vendor\\efko-cr\\alpha\\src\\'], ['\\', '', 'Alpha\\'], strstr($className, '.php', true));
+        $namespaceName = $this->getNamespaceFromFile($className);
 
-        if (is_subclass_of(ucfirst($namespaceName), ConsoleCommandInterface::class) === false) {
+        if (is_subclass_of($namespaceName, ConsoleCommandInterface::class) === false) {
             throw new \InvalidArgumentException("Неверный тип объекта $namespaceName");
         }
 
@@ -73,4 +73,19 @@ class ConsoleKernel implements ConsoleKernelInterface
 
         exit;
     }
+
+    private function getNamespaceFromFile(string $filePath): string
+    {
+        $fileContent = file_get_contents($filePath);
+        $matches = [];
+
+        preg_match('/^namespace\s+(.+?);/m', $fileContent, $matches);
+        $namespace = $matches[1] ?? '';
+
+        preg_match('/^class\s+(\w+)/m', $fileContent, $matches);
+        $className = $matches[1] ?? '';
+
+        return trim($namespace . '\\' . $className, '\\');
+    }
+
 }
