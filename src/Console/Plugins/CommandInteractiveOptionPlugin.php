@@ -13,12 +13,12 @@ class CommandInteractiveOptionPlugin implements ConsoleInputPluginInterface
     {
     }
 
-    function isSuitable(ConsoleInputInterface $input): bool
+    public function isSuitable(ConsoleInputInterface $input): bool
     {
         return $input->hasOption('--interactive') === true || $input->hasOption('--na') === true;
     }
 
-    function handle(ConsoleInputInterface $input): void
+    public function handle(ConsoleInputInterface $input): void
     {
         foreach ($input->getDefinition()->getArguments() as $key => $value) {
             $default = empty($value['default']) === false ? "[{$value['default']}]" : '';
