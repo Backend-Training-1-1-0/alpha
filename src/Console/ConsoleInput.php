@@ -9,6 +9,10 @@ use Alpha\Contracts\{
 
 class ConsoleInput implements ConsoleInputInterface
 {
+    private array $optionMapping = [
+        '--h' => '--help',
+        '--na' => '--interactive',
+    ];
     public array $arguments = [];
     public array $options = [];
     private readonly CommandDefinition $definition;
@@ -103,6 +107,13 @@ class ConsoleInput implements ConsoleInputInterface
             }
         }
     }
+    public function getOptionMapping(string $attribute)
+    {
+        if (empty($this->optionMapping[$attribute]) === false){
+            return $this->optionMapping[$attribute];
+        }
+        return $attribute;
+    }
 
     private function setDefaults(): void
     {
@@ -117,8 +128,9 @@ class ConsoleInput implements ConsoleInputInterface
     {
         $optionsNames = array_keys($this->definition->getOptions());
         foreach ($this->options as $option) {
+            $catOptionsNames = $this->getOptionMapping($option);
             if (
-                in_array($option, $optionsNames) === false &&
+                in_array($catOptionsNames, $optionsNames) === false &&
                 (
                     $this->hasOption('--interactive') === false ||
                     $this->hasOption('--na') === false ||
