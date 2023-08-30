@@ -18,12 +18,12 @@ class CommandHelpOptionPlugin implements ConsoleInputPluginInterface
     {
     }
 
-    function isSuitable(ConsoleInputInterface $input): bool
+    public function isSuitable(ConsoleInputInterface $input): bool
     {
         return $input->hasOption('--help') === true || $input->hasOption('--h') === true;
     }
 
-    function handle(ConsoleInputInterface $input): void
+    public function handle(ConsoleInputInterface $input): void
     {
         $this->definition = $input->getDefinition();
         $this->printCommandInfo();
@@ -31,7 +31,7 @@ class CommandHelpOptionPlugin implements ConsoleInputPluginInterface
         container()->call(ConsoleKernel::class, 'terminate');
     }
 
-    public function printCommandInfo()
+    private function printCommandInfo(): void
     {
         $argsString = '{' . implode('}{', array_keys($this->definition->getArguments())) . '}';
 
