@@ -26,8 +26,7 @@ class CommandDetachOptionPlugin implements ConsoleInputPluginInterface
 
         $commandName = $input->getDefinition()->getCommandName();
 
-//        exec("php ./bin $commandName $argumentsString > /dev/null 2>&1 &");
-        exec("php ./bin $commandName $argumentsString > file1");
+        exec("php ./bin $commandName $argumentsString > /dev/null 2>&1 &");
 
         $this->consoleKernel->terminate();
     }
