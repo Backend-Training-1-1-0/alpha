@@ -39,15 +39,20 @@ class MySqlConnection extends PDO implements DatabaseConnectionInterface
     function insert(string $tableName, array $values, string $condition = null, array $bindings = []): int
     {
         $cols = implode(',', array_keys($values));
-        $placeholders = implode(',', array_fill(0, count($values), '?'));
+        $placeholders = implode(',', $values);
         $query = "INSERT INTO $tableName ($cols) VALUES ($placeholders)" . ($condition !== null ? " WHERE $condition" : '');
+
         return $this->exec($query, array_values($values) + $bindings);
     }
 
     function update(string $tableName, array $values, string $condition = null, array $bindings = []): int
     {
-        $set = implode(',', array_map(fn($k) => "$k = ?", array_keys($values)));
+        $set = implode(',', array_map(function($k) {
+            return "$k = ?";
+        }, array_keys($values)));
+
         $query = "UPDATE $tableName SET $set" . ($condition !== null ? " WHERE $condition" : '');
+
         return $this->exec($query, array_values($values) + $bindings);
     }
 
