@@ -10,23 +10,22 @@ class CommandDetachOptionPlugin implements ConsoleInputPluginInterface
 {
     public function __construct(private ConsoleKernelInterface $consoleKernel) {}
 
-    function isSuitable(ConsoleInputInterface $input): bool
+    public function isSuitable(ConsoleInputInterface $input): bool
     {
         return $input->hasOption('--detach') === true || $input->hasOption('--d') === true;
     }
 
-    function handle(ConsoleInputInterface $input): void
+    public function handle(ConsoleInputInterface $input): void
     {
-        $arguments = $input->getDefinition()->getArguments();
+        $argumentsString = implode(' ', array_values($input->arguments));
 
-        $argumentsString = '';
-        foreach ($arguments as $key => $value) {
-            $argumentsString .= $input->getArgument($key) . ' ';
-        }
+        $options = array_diff($input->options, ['--detach', '--d']);
+
+        $optionsString = implode(' ', $options);
 
         $commandName = $input->getDefinition()->getCommandName();
 
-        exec("php ./bin $commandName $argumentsString > /dev/null 2>&1 &");
+        exec("php ./bin $commandName $argumentsString $optionsString > /dev/null 2>&1 &");
 
         $this->consoleKernel->terminate();
     }
