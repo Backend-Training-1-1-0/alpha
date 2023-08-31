@@ -16,6 +16,10 @@ class CommandDefinition
         '--interactive' => [
             'description' => 'Вызов команды в режиме интерактивного ввода',
             'isHidden' => true,
+        ],
+        '--detach' => [
+            'description' => 'Перевод команды в фоновый режим',
+            'isHidden' => true,
         ]
     ];
 
