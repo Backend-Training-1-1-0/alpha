@@ -6,11 +6,14 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.6.0](https://github.com/EFKO-CR/alpha/releases/tag/0.6.0) ] - 01.09.2023
+
 - Реализовано:
   - Для объекта обработки пользовательского ввода создать функционал регистрации плагинов
   - Плагин CommandInteractiveOptionPlugin
   - Плагин CommandHelpOptionPlugin
   - Метод ConsoleKernel::terminate, выполняющий процесс завершения скрипта
+  - Плагин CommandDetachOptionPlugin
 - Исправлено:
   - Перебор всех доступных опций
   - Определение аргумента через знак “?
