@@ -9,6 +9,8 @@
 ## [ [0.6.0](https://github.com/EFKO-CR/alpha/releases/tag/0.6.0) ] - 01.09.2023
 
 - Реализовано:
+  - Реализован маппинг комманд
+  - Реализованы методы MySqlConnection класса
   - Для объекта обработки пользовательского ввода создать функционал регистрации плагинов
   - Плагин CommandInteractiveOptionPlugin
   - Плагин CommandHelpOptionPlugin
