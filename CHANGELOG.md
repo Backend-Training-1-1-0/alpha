@@ -6,11 +6,16 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.7.0](https://github.com/EFKO-CR/alpha/releases/tag/0.7.0) ] - 01.09.2023
+
+- Реализовано:
+  - Добавлен метод singleton для регистрации объектов в di контейнер 
+  - Реализованы методы MySqlConnection класса
+
 ## [ [0.6.0](https://github.com/EFKO-CR/alpha/releases/tag/0.6.0) ] - 01.09.2023
 
 - Реализовано:
   - Реализован маппинг комманд
-  - Реализованы методы MySqlConnection класса
   - Для объекта обработки пользовательского ввода создать функционал регистрации плагинов
   - Плагин CommandInteractiveOptionPlugin
   - Плагин CommandHelpOptionPlugin
