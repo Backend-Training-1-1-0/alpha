@@ -16,6 +16,10 @@ class CommandDefinition
         '--interactive' => [
             'description' => 'Вызов команды в режиме интерактивного ввода',
             'isHidden' => true,
+        ],
+        '--detach' => [
+            'description' => 'Перевод команды в фоновый режим',
+            'isHidden' => true,
         ]
     ];
 
@@ -86,12 +90,13 @@ class CommandDefinition
                 'required' => false,
                 'default' => $arr[1],
             ];
-        } else {
-            $this->arguments[$name] = [
-                'description' => $description,
-                'required' => true,
-                'default' => null,
-            ];
+            return;
         }
+
+        $this->arguments[$name] = [
+            'description' => $description,
+            'required' => true,
+            'default' => null,
+        ];
     }
 }
