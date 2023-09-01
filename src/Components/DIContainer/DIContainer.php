@@ -65,6 +65,7 @@ class DIContainer implements DIContainerInterface
         return $instance;
     }
 
+    //TODO: вырезать, заменить на singletone
     public function register(string $contract, object $dependence): void
     {
         $this->container[$contract] = $dependence;

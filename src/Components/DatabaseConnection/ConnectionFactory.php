@@ -13,6 +13,7 @@ class ConnectionFactory
     {
         $driver = $config['driver'];
 
+        //TODO: заменить на match
         switch ($driver) {
             case 'mysql':
                 return (new MariaDBConnector())->connect($config);
