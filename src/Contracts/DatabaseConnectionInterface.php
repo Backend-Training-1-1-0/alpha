@@ -8,7 +8,7 @@ interface DatabaseConnectionInterface
 
     function select(string $tableName, array $columns, string $condition = null, array $bindings = []): array|false;
 
-    function selectOne(string $tableName, array $columns, string $condition = null, array $bindings = []): object|false;
+    function selectOne(string $tableName, array $columns, string $condition = null, array $bindings = []): array|false;
 
     function insert(string $tableName, array $values, string $condition = null, array $bindings = []): int;
 

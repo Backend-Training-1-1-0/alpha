@@ -8,7 +8,7 @@ use PDO;
 class MySqlConnection extends PDO implements DatabaseConnectionInterface
 {
 
-    function exec(string $query, array $bindings = []): int
+    public function exec(string $query, array $bindings = []): int
     {
         $stmt = $this->prepare($query);
         $stmt->execute($bindings);
@@ -16,7 +16,7 @@ class MySqlConnection extends PDO implements DatabaseConnectionInterface
         return $stmt->rowCount();
     }
 
-    function select(string $tableName, array $columns, string $condition = null, array $bindings = []): array|false
+    public function select(string $tableName, array $columns, string $condition = null, array $bindings = []): array|false
     {
         $cols = implode(',', $columns);
         $query = "SELECT $cols FROM $tableName" . ($condition !== null ? " WHERE $condition" : '');
@@ -26,7 +26,7 @@ class MySqlConnection extends PDO implements DatabaseConnectionInterface
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function selectOne(string $tableName, array $columns, string $condition = null, array $bindings = []): array|false
+    public function selectOne(string $tableName, array $columns, string $condition = null, array $bindings = []): array|false
     {
         $cols = implode(',', $columns);
         $query = "SELECT $cols FROM $tableName" . ($condition !== null ? " WHERE $condition LIMIT 1" : ' LIMIT 1');
@@ -36,29 +36,63 @@ class MySqlConnection extends PDO implements DatabaseConnectionInterface
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    function insert(string $tableName, array $values, string $condition = null, array $bindings = []): int
+    public function insert(string $tableName, array $values, string $condition = null, array $bindings = []): int
     {
         $cols = implode(',', array_keys($values));
-        $placeholders = implode(',', $values);
-        $query = "INSERT INTO $tableName ($cols) VALUES ($placeholders)" . ($condition !== null ? " WHERE $condition" : '');
+        
+        $stringValues = $this->prepareValuesForInsert($values);
+        $query = "INSERT INTO $tableName ($cols) VALUES ($stringValues)" . ($condition !== null ? " WHERE $condition" : '');
 
-        return $this->exec($query, array_values($values) + $bindings);
+        return $this->exec($query, $bindings);
     }
 
-    function update(string $tableName, array $values, string $condition = null, array $bindings = []): int
+    public function update(string $tableName, array $values, string $condition = null, array $bindings = []): int
     {
-        $set = implode(',', array_map(function($k) {
-            return "$k = ?";
-        }, array_keys($values)));
+        $set =  $this->prepareValuesForUpdate($values);
 
         $query = "UPDATE $tableName SET $set" . ($condition !== null ? " WHERE $condition" : '');
 
-        return $this->exec($query, array_values($values) + $bindings);
+        return $this->exec($query, $bindings);
     }
 
-    function delete(string $tableName, string $condition, array $bindings = []): int
+    public function delete(string $tableName, string $condition, array $bindings = []): int
     {
         $query = "DELETE FROM $tableName WHERE $condition";
         return $this->exec($query, $bindings);
+    }
+
+    private function prepareValuesForInsert(array $values) : string
+    {
+        $result = [];
+
+        foreach ($values as $item) {
+            if (is_string($item)) {
+                $result[] = "'" . $item . "'";
+                continue;
+            }
+
+            $result[] = $item;
+        }
+        $string = implode(',', $result);
+
+        return $string;
+    }
+
+    private function prepareValuesForUpdate(array $values) : string
+    {
+        $result = [];
+
+        foreach ($values as $column => $item) {
+
+            if (is_string($item)) {
+                $result[] = $column . ' = ' . "'" . $item . "'";
+                continue;
+            }
+
+            $result[] = $column . ' = ' .$item;
+        }
+        $string = implode(',', $result);
+
+        return $string;
     }
 }
