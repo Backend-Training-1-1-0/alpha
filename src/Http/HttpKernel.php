@@ -28,11 +28,11 @@ class HttpKernel implements HttpKernelInterface
 
         $response = $this->router->dispatch($this->request);
 
-        if($response instanceof HttpResponseInterface) {
+        if ($response instanceof HttpResponseInterface) {
             return $response;
         }
 
-        if($response instanceof JsonResponse) {
+        if ($response instanceof JsonResponse) {
             $this->response->setHeader('Content-Type', 'application/json');
 
             $this->response->setBody(json_encode($response->data));
@@ -51,7 +51,7 @@ class HttpKernel implements HttpKernelInterface
             $handlerCallback($exception);
         });
 
-        set_error_handler(function ($errorLevel, $errorMessage, $errorFile, $errorLine) use ($handlerCallback)  {
+        set_error_handler(function ($errorLevel, $errorMessage, $errorFile, $errorLine) use ($handlerCallback) {
             $handlerCallback(new RuntimeException("Runtime error [$errorLevel]. \"$errorMessage\" with file \"$errorFile:$errorLine\""));
         });
     }

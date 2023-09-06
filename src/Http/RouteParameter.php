@@ -10,7 +10,8 @@ class RouteParameter
 
     public function __construct(
         private readonly string $param,
-    ) {
+    )
+    {
         $this->prepareParam();
     }
 
@@ -24,9 +25,9 @@ class RouteParameter
         }
 
         if (substr_count($param, '=') === 1 && str_ends_with($param, '=') === false) {
-            $arr = explode('=', $param);
-            $this->defaultValue = $arr[1];
-            $param = $arr[0];
+            $argument = explode('=', $param);
+            $this->defaultValue = $argument[1];
+            $param = $argument[0];
         }
 
         $this->name = $param;

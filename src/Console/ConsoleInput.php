@@ -20,7 +20,7 @@ class ConsoleInput implements ConsoleInputInterface
         $this->tokens = array_slice($_SERVER['argv'], 2);
     }
 
-    public function bindDefinition(ConsoleCommandInterface $command):void
+    public function bindDefinition(ConsoleCommandInterface $command): void
     {
         $this->arguments = [];
         $this->options = [];

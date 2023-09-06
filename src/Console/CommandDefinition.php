@@ -25,7 +25,7 @@ class CommandDefinition
 
     public function __construct(
         private readonly string $signature,
-        public readonly string $description = '',
+        public readonly string  $description = '',
     )
     {
         $this->initDefinitions();
@@ -47,7 +47,7 @@ class CommandDefinition
         return $this->options;
     }
 
-    public function getCommonOptions() :array
+    public function getCommonOptions(): array
     {
         return $this->commonOptions;
     }
@@ -84,11 +84,11 @@ class CommandDefinition
     private function initArgument(string $name, string $description): void
     {
         if (substr_count($name, "=") === 1 && str_ends_with($name, "=") === false) {
-            $arr = explode("=", $name);
-            $this->arguments[$arr[0]] = [
+            $argument = explode("=", $name);
+            $this->arguments[$argument[0]] = [
                 'description' => $description,
                 'required' => false,
-                'default' => $arr[1],
+                'default' => $argument[1],
             ];
             return;
         }

@@ -39,7 +39,7 @@ class MySqlConnection extends PDO implements DatabaseConnectionInterface
     public function insert(string $tableName, array $values, string $condition = null, array $bindings = []): int
     {
         $cols = implode(',', array_keys($values));
-        
+
         $stringValues = $this->prepareValuesForInsert($values);
         $query = "INSERT INTO $tableName ($cols) VALUES ($stringValues)" . ($condition !== null ? " WHERE $condition" : '');
 
@@ -48,7 +48,7 @@ class MySqlConnection extends PDO implements DatabaseConnectionInterface
 
     public function update(string $tableName, array $values, string $condition = null, array $bindings = []): int
     {
-        $set =  $this->prepareValuesForUpdate($values);
+        $set = $this->prepareValuesForUpdate($values);
 
         $query = "UPDATE $tableName SET $set" . ($condition !== null ? " WHERE $condition" : '');
 
@@ -61,7 +61,7 @@ class MySqlConnection extends PDO implements DatabaseConnectionInterface
         return $this->exec($query, $bindings);
     }
 
-    private function prepareValuesForInsert(array $values) : string
+    private function prepareValuesForInsert(array $values): string
     {
         $result = [];
 
@@ -78,7 +78,7 @@ class MySqlConnection extends PDO implements DatabaseConnectionInterface
         return $string;
     }
 
-    private function prepareValuesForUpdate(array $values) : string
+    private function prepareValuesForUpdate(array $values): string
     {
         $result = [];
 
@@ -89,7 +89,7 @@ class MySqlConnection extends PDO implements DatabaseConnectionInterface
                 continue;
             }
 
-            $result[] = $column . ' = ' .$item;
+            $result[] = $column . ' = ' . $item;
         }
         $string = implode(',', $result);
 

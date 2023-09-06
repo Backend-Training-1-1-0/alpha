@@ -35,12 +35,12 @@ class CommandHelpOptionPlugin implements ConsoleInputPluginInterface
     {
         $argsString = '{' . implode('}{', array_keys($this->definition->getArguments())) . '}';
 
-        $optionsString =  $this->definition->getOptions() === [] ? '' : '[опции]';
+        $optionsString = $this->definition->getOptions() === [] ? '' : '[опции]';
         $this->output->info("Вызов:" . PHP_EOL);
         $this->output->stdout("    " .
             $this->definition->getCommandName() . " " .
             $argsString . ' ' .
-            $optionsString.
+            $optionsString .
             PHP_EOL);
 
         $this->output->info("Назначение:" . PHP_EOL);
@@ -50,14 +50,14 @@ class CommandHelpOptionPlugin implements ConsoleInputPluginInterface
         foreach ($this->definition->getArguments() as $name => $argData) {
             $isRequiredString = $argData['required'] === true ? 'обязательный параметр' : 'необязательный параметр';
 
-            $descriptionOutput = [  $argData['description'], $isRequiredString];
+            $descriptionOutput = [$argData['description'], $isRequiredString];
 
-            if($argData['default'] !== null) {
+            if ($argData['default'] !== null) {
                 $descriptionOutput[] = 'значение по умолчанию: ' . $argData['default'];
             }
 
-            $this->output->success( '    ' . $name . ' ');
-            $this->output->stdout(  implode(', ' , $descriptionOutput) . PHP_EOL);
+            $this->output->success('    ' . $name . ' ');
+            $this->output->stdout(implode(', ', $descriptionOutput) . PHP_EOL);
         }
 
         $this->output->info("Опции:" . PHP_EOL);
@@ -65,8 +65,8 @@ class CommandHelpOptionPlugin implements ConsoleInputPluginInterface
             if (isset($optionData['isHidden']) && $optionData['isHidden'] === true) {
                 continue;
             }
-            $this->output->success( '    ' . $name);
-            $this->output->stdout( ' ' . $optionData['description'] . PHP_EOL);
+            $this->output->success('    ' . $name);
+            $this->output->stdout(' ' . $optionData['description'] . PHP_EOL);
         }
     }
 }

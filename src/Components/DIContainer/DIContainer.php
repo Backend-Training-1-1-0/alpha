@@ -14,7 +14,9 @@ class DIContainer implements DIContainerInterface
     private array $container = [];
     private static self $instance;
 
-    private function __construct(private array $config) { }
+    private function __construct(private array $config)
+    {
+    }
 
     public function __clone(): void
     {
@@ -39,7 +41,7 @@ class DIContainer implements DIContainerInterface
         $dependencies = [];
 
         foreach ($parameters as $parameter) {
-            $dependenceType = (string) $parameter->getType();
+            $dependenceType = (string)$parameter->getType();
 
             if (isset($this->container[$dependenceType])) {
                 $dependencies[] = $this->container[$dependenceType];
@@ -56,7 +58,7 @@ class DIContainer implements DIContainerInterface
     public function make(string $interfaceName): object
     {
         if (isset($this->config[$interfaceName]) === false) {
-            throw new \OutOfRangeException('Нет ' . $interfaceName .  ' в config');
+            throw new \OutOfRangeException('Нет ' . $interfaceName . ' в config');
         }
 
         $instance = $this->container[$interfaceName] ?? $this->build($this->config[$interfaceName]);
@@ -67,11 +69,11 @@ class DIContainer implements DIContainerInterface
 
     public function singleton(string $contract, string|callable|object $dependency): void
     {
-        if(is_string($dependency)) {
+        if (is_string($dependency)) {
             $instance = new $dependency;
         }
 
-        if(is_callable($dependency)) {
+        if (is_callable($dependency)) {
             $dependency = $dependency($this);
         }
 

@@ -116,7 +116,7 @@ class Router implements HttpRouterInterface
 
         $groupCallback($this);
 
-        if(is_array($middleware) === false) {
+        if (is_array($middleware) === false) {
             $middleware = [$middleware];
         }
 
