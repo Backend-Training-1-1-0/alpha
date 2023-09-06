@@ -56,22 +56,16 @@ class DIContainer implements DIContainerInterface
     public function make(string $interfaceName): object
     {
         if (isset($this->config[$interfaceName]) === false) {
-            throw new \OutOfRangeException('Нет такого интерфейса в config');
+            throw new \OutOfRangeException('Нет ' . $interfaceName .  ' в config');
         }
 
         $instance = $this->container[$interfaceName] ?? $this->build($this->config[$interfaceName]);
-        $this->register($interfaceName, $instance);
+        $this->singleton($interfaceName, $instance);
 
         return $instance;
     }
 
-    //TODO: вырезать, заменить на singletone
-    public function register(string $contract, object $dependence): void
-    {
-        $this->container[$contract] = $dependence;
-    }
-
-    public function singleton(string $contract, string|callable|object $dependency)
+    public function singleton(string $contract, string|callable|object $dependency): void
     {
         if(is_string($dependency)) {
             $instance = new $dependency;
