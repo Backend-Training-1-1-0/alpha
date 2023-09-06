@@ -12,15 +12,33 @@ class CommandHelpOptionPlugin implements ConsoleInputPluginInterface
 {
     private CommandDefinition $definition;
 
+    private array $option = [
+        '--help' => [
+            'description' => 'Вывод информации о команде',
+            'isHidden' => true,
+            'shortcut' => '--h',
+        ],
+    ];
+
     public function __construct(
         private readonly ConsoleOutputInterface $output
     )
     {
     }
 
+    //TODO: вынести в абстрактный класс
+    public function define(ConsoleInputInterface $input): void
+    {
+        $definition = $input->getDefinition();
+        $definition->setOption($this->option);
+    }
+
+    //TODO: вынести в абстрактный класс
     public function isSuitable(ConsoleInputInterface $input): bool
     {
-        return $input->hasOption('--help') === true || $input->hasOption('--h') === true;
+        $optionName = array_key_first($this->option);
+        return $input->hasOption($optionName) === true
+            || $input->hasOption($this->option[$optionName]['shortcut']) === true;
     }
 
     public function handle(ConsoleInputInterface $input): void

@@ -8,28 +8,12 @@ class CommandDefinition
     private array $arguments = [];
     private array $options = [];
 
-    private array $commonOptions = [
-        '--help' => [
-            'description' => 'Вывод информации о команде',
-            'isHidden' => true,
-        ],
-        '--interactive' => [
-            'description' => 'Вызов команды в режиме интерактивного ввода',
-            'isHidden' => true,
-        ],
-        '--detach' => [
-            'description' => 'Перевод команды в фоновый режим',
-            'isHidden' => true,
-        ]
-    ];
-
     public function __construct(
         private readonly string $signature,
         public readonly string $description = '',
     )
     {
         $this->initDefinitions();
-        $this->options += $this->commonOptions;
     }
 
     public function getCommandName(): string
@@ -50,6 +34,11 @@ class CommandDefinition
     public function getCommonOptions() :array
     {
         return $this->commonOptions;
+    }
+
+    public function setOption(array $option): void
+    {
+        $this->options += $option;
     }
 
     private function initDefinitions(): void

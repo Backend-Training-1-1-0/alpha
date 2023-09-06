@@ -52,9 +52,9 @@ class ListCommand implements ConsoleCommandInterface
 
         $this->output->success("Доступные опции:" . PHP_EOL);
 
-        $definition = new CommandDefinition(self::getSignature());
+        $definition = $this->input->getDefinition();
 
-        foreach ($definition->getCommonOptions() as $property => $propertyData) {
+        foreach ($definition->getOptions() as $property => $propertyData) {
             $this->output->success(  '    ' . $property );
             $this->output->stdout(   " : ". $propertyData['description'] . PHP_EOL);
         }

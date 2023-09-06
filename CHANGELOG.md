@@ -6,6 +6,11 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.8.0](https://github.com/EFKO-CR/alpha/releases/tag/0.8.0) ] - 06.09.2023
+
+- Реализовано:
+  - Плагины сами вставляют свое определение в Command Definition
+
 ## [ [0.7.0](https://github.com/EFKO-CR/alpha/releases/tag/0.7.0) ] - 01.09.2023
 
 - Реализовано:

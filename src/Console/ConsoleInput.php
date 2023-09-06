@@ -85,7 +85,10 @@ class ConsoleInput implements ConsoleInputInterface
     private function executePlugins()
     {
         foreach ($this->plugins as $plugin) {
+            /* @var ConsoleInputPluginInterface $pluginHandler*/
             $pluginHandler = container()->build($plugin);
+
+            $pluginHandler->define($this);
 
             if ($pluginHandler->isSuitable($this)) {
                 $pluginHandler->handle($this);
@@ -115,7 +118,10 @@ class ConsoleInput implements ConsoleInputInterface
 
     private function validateOptions(): void
     {
-        $optionsNames = array_keys($this->definition->getOptions());
+        $options = $this->definition->getOptions();
+
+        $optionsNames = array_merge(array_keys($options), array_column($options, 'shortcut'));
+
         foreach ($this->options as $option) {
             if (
                 in_array($option, $optionsNames) === false
