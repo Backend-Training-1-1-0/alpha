@@ -29,10 +29,12 @@ class ConsoleInput implements ConsoleInputInterface
             $command::getDescription()
         );
 
+
         $this->parse();
+        $this->definePlugins();
+        $this->validateOptions();
         $this->executePlugins();
         $this->validate();
-        $this->validateOptions();
         $this->setDefaults();
     }
 
@@ -82,13 +84,20 @@ class ConsoleInput implements ConsoleInputInterface
         }
     }
 
-    private function executePlugins()
+    private function definePlugins()
     {
         foreach ($this->plugins as $plugin) {
             /* @var ConsoleInputPluginInterface $pluginHandler*/
             $pluginHandler = container()->build($plugin);
 
             $pluginHandler->define($this);
+        }
+    }
+    private function executePlugins()
+    {
+        foreach ($this->plugins as $plugin) {
+            /* @var ConsoleInputPluginInterface $pluginHandler*/
+            $pluginHandler = container()->build($plugin);
 
             if ($pluginHandler->isSuitable($this)) {
                 $pluginHandler->handle($this);

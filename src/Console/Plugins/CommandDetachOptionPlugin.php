@@ -43,7 +43,7 @@ class CommandDetachOptionPlugin implements ConsoleInputPluginInterface
 
         $commandName = $input->getDefinition()->getCommandName();
 
-        exec("php ./bin $commandName $argumentsString $optionsString > /dev/null 2>&1 &");
+        exec("./bin $commandName $argumentsString $optionsString");
 
         $this->consoleKernel->terminate();
     }
