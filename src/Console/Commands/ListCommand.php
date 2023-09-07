@@ -53,11 +53,11 @@ class ListCommand implements ConsoleCommandInterface
 
         $this->output->success("Доступные опции:" . PHP_EOL);
 
-        $definition = new CommandDefinition(self::getSignature());
+        $definition = $this->input->getDefinition();
 
-        foreach ($definition->getCommonOptions() as $property => $propertyData) {
-            $this->output->success('    ' . $property);
-            $this->output->stdout(" : " . $propertyData['description'] . PHP_EOL);
+        foreach ($definition->getOptions() as $property => $propertyData) {
+            $this->output->success('    ' . $property );
+            $this->output->stdout(" : ". $propertyData['description'] . PHP_EOL);
         }
 
         $this->output->stdout(PHP_EOL);
@@ -73,7 +73,7 @@ class ListCommand implements ConsoleCommandInterface
             if ((bool)$command['isHidden'] === true) {
                 continue;
             }
-            $this->output->success('    ' . $key,);
+            $this->output->success('    ' . $key);
             $this->output->stdout(" - {$command['description']}" . PHP_EOL);
         }
     }

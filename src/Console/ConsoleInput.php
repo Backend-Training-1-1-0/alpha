@@ -29,10 +29,12 @@ class ConsoleInput implements ConsoleInputInterface
             $command::getDescription()
         );
 
+
         $this->parse();
+        $this->definePlugins();
+        $this->validateOptions();
         $this->executePlugins();
         $this->validate();
-        $this->validateOptions();
         $this->setDefaults();
     }
 
@@ -82,9 +84,19 @@ class ConsoleInput implements ConsoleInputInterface
         }
     }
 
+    private function definePlugins()
+    {
+        foreach ($this->plugins as $plugin) {
+            /* @var ConsoleInputPluginInterface $pluginHandler*/
+            $pluginHandler = container()->build($plugin);
+
+            $pluginHandler->define($this);
+        }
+    }
     private function executePlugins()
     {
         foreach ($this->plugins as $plugin) {
+            /* @var ConsoleInputPluginInterface $pluginHandler*/
             $pluginHandler = container()->build($plugin);
 
             if ($pluginHandler->isSuitable($this)) {
@@ -115,7 +127,10 @@ class ConsoleInput implements ConsoleInputInterface
 
     private function validateOptions(): void
     {
-        $optionsNames = array_keys($this->definition->getOptions());
+        $options = $this->definition->getOptions();
+
+        $optionsNames = array_merge(array_keys($options), array_column($options, 'shortcut'));
+
         foreach ($this->options as $option) {
             if (
                 in_array($option, $optionsNames) === false

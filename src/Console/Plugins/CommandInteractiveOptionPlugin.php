@@ -2,10 +2,21 @@
 
 namespace Alpha\Console\Plugins;
 
-use Alpha\Contracts\{ConsoleInputInterface, ConsoleInputPluginInterface, ConsoleOutputInterface};
+use Alpha\Contracts\{
+    ConsoleInputInterface,
+    ConsoleOutputInterface
+};
 
-class CommandInteractiveOptionPlugin implements ConsoleInputPluginInterface
+class CommandInteractiveOptionPlugin extends BaseCommandPlugin
 {
+    protected array $option = [
+        '--interactive' => [
+            'description' => 'Вызов команды в режиме интерактивного ввода',
+            'isHidden' => true,
+            'shortcut' => '-na',
+        ],
+    ];
+
     public function __construct(
         private readonly ConsoleOutputInterface $output
     )
