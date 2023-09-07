@@ -2,14 +2,13 @@
 
 namespace Alpha\Console\Plugins;
 
-use Alpha\Contracts\{
-    ConsoleInputInterface,
-    ConsoleInputPluginInterface,
-};
+use Alpha\Contracts\{ConsoleInputInterface, ConsoleInputPluginInterface, ConsoleOutputInterface};
 
 class CommandInteractiveOptionPlugin implements ConsoleInputPluginInterface
 {
-    public function __construct()
+    public function __construct(
+        private readonly ConsoleOutputInterface $output
+    )
     {
     }
 
@@ -35,7 +34,7 @@ class CommandInteractiveOptionPlugin implements ConsoleInputPluginInterface
 
     private function getInput(string $argumentName, string $prompt): mixed
     {
-        echo "$prompt" . PHP_EOL;
+        $this->output->stdout("$prompt" . PHP_EOL);
 
         $result = trim(fgets(STDIN));
 
@@ -44,7 +43,7 @@ class CommandInteractiveOptionPlugin implements ConsoleInputPluginInterface
 
     private function askForApproval(ConsoleInputInterface $input, string $key, array $value): void
     {
-        echo "Применить опцию $key? ({$value["description"]}) [да] да/нет" . PHP_EOL;
+        $this->output->stdout("Применить опцию $key? ({$value["description"]}) [да] да/нет" . PHP_EOL);
         $approval = trim(fgets(STDIN));
 
         if ($approval === '' || $approval === 'да') {
