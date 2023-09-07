@@ -38,7 +38,7 @@ class CommandDefinition
 
     public function setOption(array $option): void
     {
-        $this->options += $option;
+        $this->options = array_merge($this->options, $option);
     }
 
     private function initDefinitions(): void

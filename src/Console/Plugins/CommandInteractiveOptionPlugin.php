@@ -7,9 +7,9 @@ use Alpha\Contracts\{
     ConsoleInputPluginInterface,
 };
 
-class CommandInteractiveOptionPlugin implements ConsoleInputPluginInterface
+class CommandInteractiveOptionPlugin extends BaseCommandPlugin
 {
-    private array $option = [
+    protected array $option = [
         '--interactive' => [
             'description' => 'Вызов команды в режиме интерактивного ввода',
             'isHidden' => true,
@@ -19,21 +19,6 @@ class CommandInteractiveOptionPlugin implements ConsoleInputPluginInterface
 
     public function __construct()
     {
-    }
-
-    //TODO: вынести в абстрактный класс
-    public function define(ConsoleInputInterface $input): void
-    {
-        $definition = $input->getDefinition();
-        $definition->setOption($this->option);
-    }
-
-    //TODO: вынести в абстрактный класс
-    public function isSuitable(ConsoleInputInterface $input): bool
-    {
-        $optionName = array_key_first($this->option);
-        return $input->hasOption($optionName) === true
-            || $input->hasOption($this->option[$optionName]['shortcut']) === true;
     }
 
     public function handle(ConsoleInputInterface $input): void

@@ -8,11 +8,11 @@ use Alpha\Contracts\ConsoleInputInterface;
 use Alpha\Contracts\ConsoleInputPluginInterface;
 use Alpha\Contracts\ConsoleOutputInterface;
 
-class CommandHelpOptionPlugin implements ConsoleInputPluginInterface
+class CommandHelpOptionPlugin extends BaseCommandPlugin
 {
     private CommandDefinition $definition;
 
-    private array $option = [
+    protected array $option = [
         '--help' => [
             'description' => 'Вывод информации о команде',
             'isHidden' => true,
@@ -24,21 +24,6 @@ class CommandHelpOptionPlugin implements ConsoleInputPluginInterface
         private readonly ConsoleOutputInterface $output
     )
     {
-    }
-
-    //TODO: вынести в абстрактный класс
-    public function define(ConsoleInputInterface $input): void
-    {
-        $definition = $input->getDefinition();
-        $definition->setOption($this->option);
-    }
-
-    //TODO: вынести в абстрактный класс
-    public function isSuitable(ConsoleInputInterface $input): bool
-    {
-        $optionName = array_key_first($this->option);
-        return $input->hasOption($optionName) === true
-            || $input->hasOption($this->option[$optionName]['shortcut']) === true;
     }
 
     public function handle(ConsoleInputInterface $input): void
