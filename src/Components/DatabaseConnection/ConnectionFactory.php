@@ -13,12 +13,9 @@ class ConnectionFactory
     {
         $driver = $config['driver'];
 
-        //TODO: заменить на match
-        switch ($driver) {
-            case 'mysql':
-                return (new MariaDBConnector())->connect($config);
-            default:
-                throw new Exception("Неизвестный драйвер: $driver");
-        }
+        return match ($driver) {
+            'mysql' => (new MariaDBConnector())->connect($config),
+            default => throw new Exception("Неизвестный драйвер: $driver"),
+        };
     }
 }

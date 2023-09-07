@@ -4,7 +4,7 @@ namespace Alpha\Console\Plugins;
 
 use Alpha\Contracts\{
     ConsoleInputInterface,
-    ConsoleInputPluginInterface,
+    ConsoleOutputInterface
 };
 
 class CommandInteractiveOptionPlugin extends BaseCommandPlugin
@@ -13,12 +13,19 @@ class CommandInteractiveOptionPlugin extends BaseCommandPlugin
         '--interactive' => [
             'description' => 'Вызов команды в режиме интерактивного ввода',
             'isHidden' => true,
-            'shortcut' => '--na',
+            'shortcut' => '-na',
         ],
     ];
 
-    public function __construct()
+    public function __construct(
+        private readonly ConsoleOutputInterface $output
+    )
     {
+    }
+
+    public function isSuitable(ConsoleInputInterface $input): bool
+    {
+        return $input->hasOption('--interactive') === true || $input->hasOption('-na') === true;
     }
 
     public function handle(ConsoleInputInterface $input): void
@@ -38,7 +45,7 @@ class CommandInteractiveOptionPlugin extends BaseCommandPlugin
 
     private function getInput(string $argumentName, string $prompt): mixed
     {
-        echo "$prompt" . PHP_EOL;
+        $this->output->stdout("$prompt" . PHP_EOL);
 
         $result = trim(fgets(STDIN));
 
@@ -47,7 +54,7 @@ class CommandInteractiveOptionPlugin extends BaseCommandPlugin
 
     private function askForApproval(ConsoleInputInterface $input, string $key, array $value): void
     {
-        echo "Применить опцию $key? ({$value["description"]}) [да] да/нет" . PHP_EOL;
+        $this->output->stdout("Применить опцию $key? ({$value["description"]}) [да] да/нет" . PHP_EOL);
         $approval = trim(fgets(STDIN));
 
         if ($approval === '' || $approval === 'да') {

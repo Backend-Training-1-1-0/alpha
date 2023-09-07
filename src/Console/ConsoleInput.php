@@ -20,7 +20,7 @@ class ConsoleInput implements ConsoleInputInterface
         $this->tokens = array_slice($_SERVER['argv'], 2);
     }
 
-    public function bindDefinition(ConsoleCommandInterface $command):void
+    public function bindDefinition(ConsoleCommandInterface $command): void
     {
         $this->arguments = [];
         $this->options = [];
@@ -78,7 +78,7 @@ class ConsoleInput implements ConsoleInputInterface
                 $this->arguments[$paramName] = is_numeric($value) ? (int)$value : $value;
             }
 
-            if (str_contains($value, '--') === true) {
+            if (str_contains($value, '--') || str_contains($value, '-')) {
                 $this->options[] = $value;
             }
         }

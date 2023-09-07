@@ -17,10 +17,11 @@ class ListCommand implements ConsoleCommandInterface
     private static bool $hidden = true;
 
     public function __construct(
-        private readonly ConsoleInputInterface $input,
+        private readonly ConsoleInputInterface  $input,
         private readonly ConsoleOutputInterface $output,
         private readonly ConsoleKernelInterface $kernel,
-    ) {
+    )
+    {
         $this->input->bindDefinition($this);
     }
 
@@ -48,15 +49,15 @@ class ListCommand implements ConsoleCommandInterface
         $this->output->warning("Фреймворк создан разработчиками компании ЭФКО Цифровые решения." . PHP_EOL);
         $this->output->warning("Является платформой для изучения базового поведения приложения созданного на PHP." . PHP_EOL);
         $this->output->warning("Фреймворк не является production-ready реализацией и не предназначен для коммерческого использования" . PHP_EOL);
-        $this->output->stdout(  PHP_EOL);
+        $this->output->stdout(PHP_EOL);
 
         $this->output->success("Доступные опции:" . PHP_EOL);
 
         $definition = $this->input->getDefinition();
 
         foreach ($definition->getOptions() as $property => $propertyData) {
-            $this->output->success(  '    ' . $property );
-            $this->output->stdout(   " : ". $propertyData['description'] . PHP_EOL);
+            $this->output->success('    ' . $property );
+            $this->output->stdout(" : ". $propertyData['description'] . PHP_EOL);
         }
 
         $this->output->stdout(PHP_EOL);
@@ -69,10 +70,10 @@ class ListCommand implements ConsoleCommandInterface
         $this->output->success("Доступные команды:" . PHP_EOL);
 
         foreach ($commands as $key => $command) {
-            if ((bool) $command['isHidden'] === true) {
+            if ((bool)$command['isHidden'] === true) {
                 continue;
             }
-            $this->output->success('    ' . $key, );
+            $this->output->success('    ' . $key);
             $this->output->stdout(" - {$command['description']}" . PHP_EOL);
         }
     }
