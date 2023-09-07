@@ -10,6 +10,7 @@
 
 - Реализовано:
   - Плагины сами вставляют свое определение в Command Definition
+  - отладка sql запросов
 
 ## [ [0.7.0](https://github.com/EFKO-CR/alpha/releases/tag/0.7.0) ] - 01.09.2023
 
