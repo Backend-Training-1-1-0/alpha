@@ -6,14 +6,17 @@ use Alpha\Contracts\ConsoleInputInterface;
 use Alpha\Contracts\ConsoleInputPluginInterface;
 use Alpha\Contracts\ConsoleKernelInterface;
 
-class CommandDetachOptionPlugin implements ConsoleInputPluginInterface
+class CommandDetachOptionPlugin extends BaseCommandPlugin
 {
     public function __construct(private ConsoleKernelInterface $consoleKernel) {}
 
-    public function isSuitable(ConsoleInputInterface $input): bool
-    {
-        return $input->hasOption('--detach') === true || $input->hasOption('--d') === true;
-    }
+    protected array $option = [
+        '--detach' => [
+            'description' => 'Перевод команды в фоновый режим',
+            'isHidden' => true,
+            'shortcut' => '--d',
+        ]
+    ];
 
     public function handle(ConsoleInputInterface $input): void
     {
@@ -25,7 +28,7 @@ class CommandDetachOptionPlugin implements ConsoleInputPluginInterface
 
         $commandName = $input->getDefinition()->getCommandName();
 
-        exec("php ./bin $commandName $argumentsString $optionsString > /dev/null 2>&1 &");
+        exec("./bin $commandName $argumentsString $optionsString");
 
         $this->consoleKernel->terminate();
     }
