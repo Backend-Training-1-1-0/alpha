@@ -76,7 +76,7 @@ class ConsoleInput implements ConsoleInputInterface
                 $this->arguments[$paramName] = is_numeric($value) ? (int)$value : $value;
             }
 
-            if (str_contains($value, '--') === true) {
+            if (str_contains($value, '--') || str_contains($value, '-')) {
                 $this->options[] = $value;
             }
         }

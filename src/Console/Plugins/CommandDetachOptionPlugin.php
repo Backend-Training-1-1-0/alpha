@@ -12,7 +12,7 @@ class CommandDetachOptionPlugin implements ConsoleInputPluginInterface
 
     public function isSuitable(ConsoleInputInterface $input): bool
     {
-        return $input->hasOption('--detach') === true || $input->hasOption('--d') === true;
+        return $input->hasOption('--detach') === true || $input->hasOption('-d') === true;
     }
 
     public function handle(ConsoleInputInterface $input): void

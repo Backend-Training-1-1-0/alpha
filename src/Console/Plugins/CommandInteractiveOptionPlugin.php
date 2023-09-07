@@ -15,7 +15,7 @@ class CommandInteractiveOptionPlugin implements ConsoleInputPluginInterface
 
     public function isSuitable(ConsoleInputInterface $input): bool
     {
-        return $input->hasOption('--interactive') === true || $input->hasOption('--na') === true;
+        return $input->hasOption('--interactive') === true || $input->hasOption('-na') === true;
     }
 
     public function handle(ConsoleInputInterface $input): void

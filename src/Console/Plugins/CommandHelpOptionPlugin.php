@@ -20,7 +20,7 @@ class CommandHelpOptionPlugin implements ConsoleInputPluginInterface
 
     public function isSuitable(ConsoleInputInterface $input): bool
     {
-        return $input->hasOption('--help') === true || $input->hasOption('--h') === true;
+        return $input->hasOption('--help') === true || $input->hasOption('-h') === true;
     }
 
     public function handle(ConsoleInputInterface $input): void
