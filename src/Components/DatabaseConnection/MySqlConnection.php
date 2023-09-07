@@ -11,7 +11,7 @@ class MySqlConnection extends PDO implements DatabaseConnectionInterface
 {
 
     #[ReturnTypeWillChange]
-    public function exec(string $query, array $bindings = []): object
+    public function exec(string $query, array $bindings = []): int
     {
         $stmt = $this->prepare($query);
         $stmt->execute($bindings);
