@@ -8,19 +8,22 @@ use Alpha\Contracts\ConsoleInputInterface;
 use Alpha\Contracts\ConsoleInputPluginInterface;
 use Alpha\Contracts\ConsoleOutputInterface;
 
-class CommandHelpOptionPlugin implements ConsoleInputPluginInterface
+class CommandHelpOptionPlugin extends BaseCommandPlugin
 {
     private CommandDefinition $definition;
+
+    protected array $option = [
+        '--help' => [
+            'description' => 'Вывод информации о команде',
+            'isHidden' => true,
+            'shortcut' => '--h',
+        ],
+    ];
 
     public function __construct(
         private readonly ConsoleOutputInterface $output
     )
     {
-    }
-
-    public function isSuitable(ConsoleInputInterface $input): bool
-    {
-        return $input->hasOption('--help') === true || $input->hasOption('--h') === true;
     }
 
     public function handle(ConsoleInputInterface $input): void

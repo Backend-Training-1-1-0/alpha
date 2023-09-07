@@ -7,15 +7,18 @@ use Alpha\Contracts\{
     ConsoleInputPluginInterface,
 };
 
-class CommandInteractiveOptionPlugin implements ConsoleInputPluginInterface
+class CommandInteractiveOptionPlugin extends BaseCommandPlugin
 {
+    protected array $option = [
+        '--interactive' => [
+            'description' => 'Вызов команды в режиме интерактивного ввода',
+            'isHidden' => true,
+            'shortcut' => '--na',
+        ],
+    ];
+
     public function __construct()
     {
-    }
-
-    public function isSuitable(ConsoleInputInterface $input): bool
-    {
-        return $input->hasOption('--interactive') === true || $input->hasOption('--na') === true;
     }
 
     public function handle(ConsoleInputInterface $input): void
