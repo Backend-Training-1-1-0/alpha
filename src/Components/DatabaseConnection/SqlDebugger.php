@@ -2,14 +2,20 @@
 
 namespace Alpha\Components\DatabaseConnection;
 
-class SqlDebugger
-{
-    public static function logQuery(string $query): void
-    {
-        if (getenv('MYSQL_LOG') !== 'true') {
-            return;
-        }
+use Alpha\Components\EventDispatcher\Message;
+use Alpha\Contracts\ObserverInterface;
 
-        file_put_contents(getenv('MYSQL_PATH_LOG'), $query . PHP_EOL, FILE_APPEND);
+class SqlDebugger implements ObserverInterface
+{
+    private array $sqlLog;
+
+    public function observe($event, Message $message): void
+    {
+        $this->sqlLog[] = $message->getMessage();
+    }
+
+    public function getSqlLog(): array
+    {
+        //TODO: реализация метода возврата лога
     }
 }
