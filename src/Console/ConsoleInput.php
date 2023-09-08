@@ -72,7 +72,7 @@ class ConsoleInput implements ConsoleInputInterface
         $listKeys = array_keys($this->definition->getArguments());
 
         foreach ($this->tokens as $key => $value) {
-            if (str_contains($value, '--') === false) {
+            if (str_contains($value, '--') === false && str_contains($value, '-') === false) {
                 $paramName = $listKeys[$key];
 
                 $this->arguments[$paramName] = is_numeric($value) ? (int)$value : $value;
