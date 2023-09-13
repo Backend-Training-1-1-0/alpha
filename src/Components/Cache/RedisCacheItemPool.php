@@ -2,19 +2,18 @@
 
 namespace Alpha\Components\Cache;
 
+use Alpha\Contracts\CacheAdapterInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
 class RedisCacheItemPool implements CacheItemPoolInterface
 {
-    private \Redis $redis;
     private array $deferredItems;
 
-    public function __construct(string $host = '127.0.0.1', int $port = 6379)
+    public function __construct(
+        private readonly CacheAdapterInterface $redis,
+    )
     {
-        $this->redis = new \Redis();
-        $this->redis->connect($host, $port);
-        $this->deferredItems = [];
     }
 
     /**
