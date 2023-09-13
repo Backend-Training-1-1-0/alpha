@@ -67,4 +67,9 @@ class RedisCacheItem implements CacheItemInterface
     {
         $this->isHit = $isHit;
     }
+
+    public function getExpiration(): ?\DateTimeInterface
+    {
+        return $this->expiresAt;
+    }
 }
