@@ -74,7 +74,9 @@ class DIContainer implements DIContainerInterface
         }
 
         if (is_callable($dependency)) {
-            $dependency = $dependency($this);
+            $this->config[$contract] = $dependency;
+            $this->container[$contract] = $dependency;
+            return;
         }
 
         $this->config[$contract] = $dependency::class;
