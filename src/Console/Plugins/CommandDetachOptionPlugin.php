@@ -32,7 +32,22 @@ class CommandDetachOptionPlugin extends BaseCommandPlugin
 
         $commandName = $input->getDefinition()->getCommandName();
 
-        exec("./bin $commandName $argumentsString $optionsString");
+        $command = "./bin $commandName $argumentsString $optionsString";
+        $descriptorSpec = [
+            ['pty'],  // stdin
+            ['pty'],  // stdout
+            ['pty'],  // stderr
+        ];
+
+        $process = proc_open($command, $descriptorSpec, $pipes);
+
+        if (is_resource($process)) {
+            // Закрываю все дескрипторы, чтобы отсоединить выполнение команды
+            fclose($pipes[0]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            proc_close($process);
+        }
 
         $this->consoleKernel->terminate();
     }
