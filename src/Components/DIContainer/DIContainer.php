@@ -119,4 +119,19 @@ class DIContainer implements DIContainerInterface
 
         return $this->build($handler)->{$method}(...$arguments);
     }
+
+    public function get(string $contract)
+    {
+        if (isset($this->container[$contract])) {
+            $dependency = $this->container[$contract];
+
+            if (is_callable($dependency)) {
+                return $dependency($this);
+            }
+
+            return $dependency;
+        }
+
+        throw new \Exception("Зависимость для контракта не найдена: $contract");
+    }
 }
