@@ -35,7 +35,8 @@
     "ext-pdo": "*",
     "psr/cache": "^3.0",
     "ext-redis": "*",
-    "psr/log": "^3.0.0"
+    "psr/log": "^3.0.0",
+    "psr/http-message": "^2.0"
   },
   "autoload": {
     "psr-4": {
