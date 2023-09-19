@@ -5,5 +5,5 @@ use Alpha\Contracts\DatabaseConnectionInterface;
 
 function db(): DatabaseConnectionInterface
 {
-    return container()->make(DatabaseConnectionInterface::class);
+    return container()->get(DatabaseConnectionInterface::class);
 }
