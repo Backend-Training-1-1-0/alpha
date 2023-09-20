@@ -34,6 +34,10 @@ class DIContainer implements DIContainerInterface
 
     public function build(string $className): object
     {
+        if (method_exists($className, '__construct') === false) {
+            return new $className();
+        }
+
         $constructor = new ReflectionMethod($className, '__construct');
 
         $parameters = $constructor->getParameters();
