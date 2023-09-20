@@ -33,6 +33,8 @@ class Response implements ResponseInterface
         if (null === $reasonPhrase && isset(self::$phrases[$this->statusCode])) {
             $this->reasonPhrase = self::$phrases[$statusCode];
         }
+
+        $this->protocol = $protocol;
     }
 
     public function send(): never
