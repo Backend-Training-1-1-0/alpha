@@ -4,10 +4,10 @@ namespace Alpha\Http;
 
 use Alpha\Contracts\{
     HttpMiddlewareInterface,
-    HttpRequestInterface,
     HttpRouterInterface,
 };
 use InvalidArgumentException;
+use Psr\Http\Message\RequestInterface;
 
 class Router implements HttpRouterInterface
 {
@@ -23,7 +23,7 @@ class Router implements HttpRouterInterface
     {
     }
 
-    public function dispatch(HttpRequestInterface $request): mixed
+    public function dispatch(RequestInterface $request): mixed
     {
         $method = $request->server()['REQUEST_METHOD'];
 
@@ -135,7 +135,7 @@ class Router implements HttpRouterInterface
         $this->add('POST', $route, $handler, $middlewares);
     }
 
-    private function handleMiddleware(array $middlewares, HttpRequestInterface $request): void
+    private function handleMiddleware(array $middlewares, RequestInterface $request): void
     {
         foreach ($middlewares as $middleware) {
             if (is_callable($middleware)) {
@@ -157,7 +157,7 @@ class Router implements HttpRouterInterface
         }
     }
 
-    private function mapArgs(HttpRequestInterface $request, Route $route): array
+    private function mapArgs(RequestInterface $request, Route $route): array
     {
         $arguments = [];
 

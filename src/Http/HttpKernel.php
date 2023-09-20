@@ -3,32 +3,32 @@
 namespace Alpha\Http;
 
 use Alpha\Contracts\{
-    HttpResponseInterface,
     HttpKernelInterface,
-    HttpRequestInterface,
     HttpRouterInterface,
 };
 use RuntimeException;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\RequestInterface;
 
 class HttpKernel implements HttpKernelInterface
 {
     public function __construct(
-        private HttpRequestInterface $request,
-        private HttpResponseInterface $response,
+        private RequestInterface $request,
+        private ResponseInterface $response,
         private HttpRouterInterface $router,
     ) {}
 
-    public function handle(): HttpResponseInterface
+    public function handle(): ResponseInterface
     {
         $this->setErrorHandler(function (\Throwable $exception) {
-            $this->response->setBody("Код ошибки: {$exception->getCode()} <br> Сообщение: {$exception->getMessage()}");
+            $body = Stream::create("Код ошибки: {$exception->getCode()} <br> Сообщение: {$exception->getMessage()}");
 
-            $this->response->send();
+            $this->response->withBody($body)->send();
         });
 
         $response = $this->router->dispatch($this->request);
 
-        if ($response instanceof HttpResponseInterface) {
+        if ($response instanceof ResponseInterface) {
             return $response;
         }
 
@@ -39,10 +39,8 @@ class HttpKernel implements HttpKernelInterface
 
             return $this->response;
         }
-
-        $this->response->setBody($response);
-
-        return $this->response;
+        
+        return $this->response->withBody(Stream::create($response));
     }
 
     private function setErrorHandler(callable $handlerCallback)

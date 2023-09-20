@@ -2,7 +2,7 @@
   "name": "efko-cr/alpha",
   "description": "Компонентный фреймворк, предоставляющий возможность быстрой реализации веб-приложений и API",
   "license": "MIT",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "authors": [
     {
       "name": "Andrey Bogachevskiy",
@@ -35,7 +35,8 @@
     "ext-pdo": "*",
     "psr/cache": "^3.0",
     "ext-redis": "*",
-    "psr/log": "^3.0.0"
+    "psr/log": "^3.0.0",
+    "psr/http-factory": "^1.0"
   },
   "autoload": {
     "psr-4": {
