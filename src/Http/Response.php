@@ -9,10 +9,7 @@ class Response implements ResponseInterface
 {
     use MessageTrait;
 
-    private int $statusCode = 200;
-    private string $reasonPhrase = '';
-
-    private array $PHRASES = [
+    private static array $phrases = [
         100 => 'Continue', 101 => 'Switching Protocols', 102 => 'Processing',
         200 => 'OK', 201 => 'Created', 202 => 'Accepted', 203 => 'Non-Authoritative Information', 204 => 'No Content', 205 => 'Reset Content', 206 => 'Partial Content', 207 => 'Multi-status', 208 => 'Already Reported',
         300 => 'Multiple Choices', 301 => 'Moved Permanently', 302 => 'Found', 303 => 'See Other', 304 => 'Not Modified', 305 => 'Use Proxy', 306 => 'Switch Proxy', 307 => 'Temporary Redirect',
@@ -20,7 +17,23 @@ class Response implements ResponseInterface
         500 => 'Internal Server Error', 501 => 'Not Implemented', 502 => 'Bad Gateway', 503 => 'Service Unavailable', 504 => 'Gateway Time-out', 505 => 'HTTP Version not supported', 506 => 'Variant Also Negotiates', 507 => 'Insufficient Storage', 508 => 'Loop Detected', 511 => 'Network Authentication Required',
     ];
 
-    public function __construct() { }
+    public function __construct(
+        string $body = '',
+        private int $statusCode = 200,
+        array $headers = [],
+        string $protocol = '1.1',
+        private string $reasonPhrase = '',
+    ) {
+        if ('' !== $body && null !== $body) {
+            $this->stream = Stream::create($body);
+        }
+
+        $this->setHeaders($headers);
+
+        if (null === $reasonPhrase && isset(self::$phrases[$this->statusCode])) {
+            $this->reasonPhrase = self::$phrases[$statusCode];
+        }
+    }
 
     public function send(): never
     {
@@ -30,9 +43,7 @@ class Response implements ResponseInterface
             header("$name: $value");
         }
 
-        echo (string) $this->getBody();
-
-//        echo $this->getBody()->getContents();
+        echo $this->getBody();
 
         exit;
     }

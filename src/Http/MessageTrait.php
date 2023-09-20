@@ -107,4 +107,9 @@ trait MessageTrait
 
         return $new;
     }
+
+    private function setHeaders(array $headers): void
+    {
+        $this->headers = \array_merge($this->headers, $headers);
+    }
 }
