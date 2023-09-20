@@ -18,7 +18,7 @@ class Response implements ResponseInterface
     ];
 
     public function __construct(
-        string $body = '',
+        string|null $body = null,
         private int $statusCode = 200,
         array $headers = [],
         string $protocol = '1.1',
@@ -33,6 +33,8 @@ class Response implements ResponseInterface
         if (null === $reasonPhrase && isset(self::$phrases[$this->statusCode])) {
             $this->reasonPhrase = self::$phrases[$statusCode];
         }
+
+        $this->protocol = $protocol;
     }
 
     public function send(): never
