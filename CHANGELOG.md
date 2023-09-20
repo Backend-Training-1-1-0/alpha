@@ -6,6 +6,11 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.11.1](https://github.com/EFKO-CR/alpha/releases/tag/0.11.1) ] - 20.09.2023
+
+- Исправлено:
+  - тип данных для параметра body конструктора Response
+
 ## [ [0.11.0](https://github.com/EFKO-CR/alpha/releases/tag/0.11.0) ] - 20.09.2023
 
 - Реализовано:

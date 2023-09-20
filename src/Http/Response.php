@@ -18,7 +18,7 @@ class Response implements ResponseInterface
     ];
 
     public function __construct(
-        string $body = '',
+        string|null $body = null,
         private int $statusCode = 200,
         array $headers = [],
         string $protocol = '1.1',
