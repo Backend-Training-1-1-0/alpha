@@ -41,7 +41,11 @@ class DIContainer implements DIContainerInterface
         $dependencies = [];
 
         foreach ($parameters as $parameter) {
-            $dependenceType = (string)$parameter->getType();
+            $dependenceType = $parameter->getType()->getName();
+
+            if ($parameter->getType()->isBuiltin() === true) {
+                continue;
+            }
 
             if (isset($this->container[$dependenceType])) {
                 $dependencies[] = $this->container[$dependenceType];

@@ -6,131 +6,101 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\StreamInterface;
 
-class Request implements HttpRequestInterface
+class Request implements RequestInterface
 {
-    private array $server = [];
-    private array $post = [];
-    private array $get = [];
+    use MessageTrait;
 
-    public function __construct() { }
-
-    public function getMethod(): string
-    {
-        return $this->server['REQUEST_METHOD'] ?? 'GET';
-    }
-
-    public function withMethod($method): RequestInterface
-    {
-        $new = clone $this;
-        $new->server['REQUEST_METHOD'] = $method;
-
-        return $new;
+    public function __construct(
+        private UriInterface $uri,
+        StreamInterface|null $stream = null,
+        private string $method = '',
+        array $headers = [],
+        string $protocol = '1.1'
+    )  {
+        $this->headers = $headers;
+        $this->protocol = $protocol;
+        $this->stream = $stream;
     }
 
     public function getRequestTarget(): string
     {
-        return $this->server['REQUEST_URI'] ?? '/';
+        $target = $this->uri->getPath();
+
+        if ($this->uri->getQuery() !== '') {
+            $target .= '?' . $this->uri->getQuery();
+        }
+
+        return $target;
     }
 
-    public function withRequestTarget($requestTarget): RequestInterface
+    public function withRequestTarget(string $requestTarget): RequestInterface
     {
         $new = clone $this;
-        $new->server['REQUEST_URI'] = $requestTarget;
+        $new->uri = $new->uri->withPath($requestTarget);
+
+        return $new;
+    }
+
+    public function getMethod(): string
+    {
+        return $this->method;
+    }
+
+    public function withMethod(string $method): RequestInterface
+    {
+        $new = clone $this;
+        $new->method = $method;
 
         return $new;
     }
 
     public function getUri(): UriInterface
     {
-        // Not implemented
-        return null;
+        return $this->uri;
     }
 
-    public function withUri(UriInterface $uri, $preserveHost = false): RequestInterface
-    {
-        // Not implemented
-        return $this;
-    }
-
-    public function getProtocolVersion(): string
-    {
-        return $this->server['SERVER_PROTOCOL'] ?? '1.1';
-    }
-
-    public function withProtocolVersion($version): RequestInterface
+    public function withUri(UriInterface $uri, bool $preserveHost = false): RequestInterface
     {
         $new = clone $this;
-        $new->server['SERVER_PROTOCOL'] = $version;
+        $new->uri = $uri;
+
+        if (!$preserveHost) {
+            $new = $new->updateHostHeaderFromUri();
+        }
 
         return $new;
     }
 
-    public function getHeaders(): array
-    {
-        // Not implemented
-        return [];
-    }
-
-    public function hasHeader($name): bool
-    {
-        // Not implemented
-        return false;
-    }
-
-    public function getHeader($name): array
-    {
-        // Not implemented
-        return [];
-    }
-
-    public function getHeaderLine($name): string
-    {
-        // Not implemented
-        return '';
-    }
-
-    public function withHeader($name, $value): RequestInterface
-    {
-        // Not implemented
-        return $this;
-    }
-
-    public function withAddedHeader($name, $value): RequestInterface
-    {
-        // Not implemented
-        return $this;
-    }
-
-    public function withoutHeader($name): RequestInterface
-    {
-        // Not implemented
-        return $this;
-    }
-
-    public function getBody(): StreamInterface
-    {
-        // Not implemented
-        return null;
-    }
-
-    public function withBody(StreamInterface $body): RequestInterface
-    {
-        // Not implemented
-        return $this;
-    }
-
     public function server(): array
     {
-        return $this->server;
+        return $_SERVER;
     }
 
     public function post(): array
     {
-        return $this->post;
+        return $_POST;
     }
 
     public function get(): array
     {
-        return $this->get;
+        return $_GET;
+    }
+
+    private function updateHostHeaderFromUri(): self
+    {
+        $host = $this->uri->getHost();
+
+        if ($host === '') {
+            return $this;
+        }
+
+        if (($port = $this->uri->getPort()) !== null) {
+            $host .= ':' . $port;
+        }
+
+        $new = clone $this;
+        $new->headers['Host'] = [$host];
+
+        return $new;
     }
 }
