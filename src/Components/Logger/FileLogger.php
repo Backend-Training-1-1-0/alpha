@@ -98,18 +98,11 @@ class FileLogger implements LoggerInterface
             'userId' => null,
             'ip' => $_SERVER['HTTP_X_REAL_IP'] ?? null,
             'real_ip' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
-            'x_debug_tag' => $this->getXDebugTag(),
+            'x_debug_tag' => X_DEBUG_TAG,
             'message' => $message,
             'exception' => $context['exception'] ?? '',
             'extras' => $context['exception'] ?? '',
         ];
-
-
         return json_encode($formatLog);
-    }
-
-    private function getXDebugTag(): string
-    {
-        return md5('x-debug-tag-' . $this->projectIndex . '-' . uniqid() . time());
     }
 }
