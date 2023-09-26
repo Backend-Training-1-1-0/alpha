@@ -29,29 +29,16 @@ class UploadedFile implements UploadedFileInterface
     private int $size;
     private StreamInterface|null $stream = null;
 
-    /**
-     * @param StreamInterface|string|resource $streamOrFile
-     * @param int $size
-     * @param int $errorStatus
-     * @param string|null $clientFilename
-     * @param string|null $clientMediaType
-     */
-    public function __construct($streamOrFile, $size, $errorStatus, $clientFilename = null, $clientMediaType = null)
+    public function __construct(
+        StreamInterface|string $streamOrFile,
+        int                    $size,
+        int                    $errorStatus,
+        string|null            $clientFilename = null,
+        string|null            $clientMediaType = null,
+    )
     {
-        if (false === \is_int($errorStatus) || !isset(self::ERRORS[$errorStatus])) {
+        if (isset(self::ERRORS[$errorStatus]) === false) {
             throw new \InvalidArgumentException('Upload file error status must be an integer value and one of the "UPLOAD_ERR_*" constants');
-        }
-
-        if (false === \is_int($size)) {
-            throw new \InvalidArgumentException('Upload file size must be an integer');
-        }
-
-        if (null !== $clientFilename && !\is_string($clientFilename)) {
-            throw new \InvalidArgumentException('Upload file client filename must be a string or null');
-        }
-
-        if (null !== $clientMediaType && !\is_string($clientMediaType)) {
-            throw new \InvalidArgumentException('Upload file client media type must be a string or null');
         }
 
         $this->error = $errorStatus;
@@ -60,16 +47,19 @@ class UploadedFile implements UploadedFileInterface
         $this->clientMediaType = $clientMediaType;
 
         if (\UPLOAD_ERR_OK === $this->error) {
-            // Depending on the value set file or stream variable.
-            if (\is_string($streamOrFile) && '' !== $streamOrFile) {
+            if (\is_string($streamOrFile) === true && '' !== $streamOrFile) {
                 $this->file = $streamOrFile;
-            } elseif (\is_resource($streamOrFile)) {
-                $this->stream = Stream::create($streamOrFile);
-            } elseif ($streamOrFile instanceof StreamInterface) {
-                $this->stream = $streamOrFile;
-            } else {
-                throw new \InvalidArgumentException('Invalid stream or file provided for UploadedFile');
             }
+
+            if (\is_resource($streamOrFile) === true) {
+                $this->stream = Stream::create($streamOrFile);
+            }
+
+            if ($streamOrFile instanceof StreamInterface) {
+                $this->stream = $streamOrFile;
+            }
+
+            throw new \InvalidArgumentException('Invalid stream or file provided for UploadedFile');
         }
     }
 
@@ -116,26 +106,28 @@ class UploadedFile implements UploadedFileInterface
             if (false === $this->moved) {
                 throw new \RuntimeException(\sprintf('Uploaded file could not be moved to "%s": %s', $targetPath, \error_get_last()['message'] ?? ''));
             }
-        } else {
-            $stream = $this->getStream();
-            if ($stream->isSeekable()) {
-                $stream->rewind();
-            }
 
-            if (false === $resource = @\fopen($targetPath, 'w')) {
-                throw new \RuntimeException(\sprintf('The file "%s" cannot be opened: %s', $targetPath, \error_get_last()['message'] ?? ''));
-            }
-
-            $dest = Stream::create($resource);
-
-            while (!$stream->eof()) {
-                if (!$dest->write($stream->read(1048576))) {
-                    break;
-                }
-            }
-
-            $this->moved = true;
+            return;
         }
+
+        $stream = $this->getStream();
+        if ($stream->isSeekable()) {
+            $stream->rewind();
+        }
+
+        if (false === $resource = @\fopen($targetPath, 'w')) {
+            throw new \RuntimeException(\sprintf('The file "%s" cannot be opened: %s', $targetPath, \error_get_last()['message'] ?? ''));
+        }
+
+        $dest = Stream::create($resource);
+
+        while (!$stream->eof()) {
+            if (!$dest->write($stream->read(1048576))) {
+                break;
+            }
+        }
+
+        $this->moved = true;
     }
 
     public function getSize(): int
