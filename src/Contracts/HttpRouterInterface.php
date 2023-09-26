@@ -2,11 +2,11 @@
 
 namespace Alpha\Contracts;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface HttpRouterInterface
 {
-    function dispatch(RequestInterface $request): mixed;
+    function dispatch(ServerRequestInterface $request): mixed;
     function addMiddleware(callable|string|array $middleware);
     function add(string $method, string $route, string|callable $handler, callable|string|array $middleware = []): void;
     function group(string $prefix, callable $groupCallback, callable|string|array $middleware = []): void;

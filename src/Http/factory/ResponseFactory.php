@@ -2,14 +2,20 @@
 
 namespace Alpha\Http\factory;
 
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
+use Alpha\Http\JsonResponse;
+use Psr\Http\Message\{
+    ResponseFactoryInterface,
+    ResponseInterface,
+};
 use Alpha\Http\Response;
 
 class ResponseFactory implements ResponseFactoryInterface
 {
-    public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
+    public function createResponse(int $code = 200, string $reasonPhrase = '', string $responseType = ''): ResponseInterface
     {
-        return new Response(null, $code, [] , '1.1', $reasonPhrase);
+        return match ($responseType) {
+            'json' => new JsonResponse(null, $code, [] , '1.1', $reasonPhrase),
+            default => new Response(null, $code, [] , '1.1', $reasonPhrase),
+        };
     }
 }
