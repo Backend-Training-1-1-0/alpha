@@ -8,12 +8,12 @@ use Alpha\Contracts\{
 };
 use RuntimeException;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class HttpKernel implements HttpKernelInterface
 {
     public function __construct(
-        private RequestInterface $request,
+        private ServerRequestInterface $request,
         private ResponseInterface $response,
         private HttpRouterInterface $router,
     ) {}
@@ -28,16 +28,12 @@ class HttpKernel implements HttpKernelInterface
 
         $response = $this->router->dispatch($this->request);
 
-        if ($response instanceof ResponseInterface) {
-            return $response;
+        if ($response instanceof JsonResponse) {
+            return $response->withHeader('Content-Type','application/json');
         }
 
-        if ($response instanceof JsonResponse) {
-            $this->response->setHeader('Content-Type', 'application/json');
-
-            $this->response->setBody(json_encode($response->data));
-
-            return $this->response;
+        if ($response instanceof ResponseInterface) {
+            return $response;
         }
         
         return $this->response->withBody(Stream::create($response));

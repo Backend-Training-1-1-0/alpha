@@ -7,7 +7,7 @@ use Alpha\Contracts\{
     HttpRouterInterface,
 };
 use InvalidArgumentException;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Router implements HttpRouterInterface
 {
@@ -23,11 +23,11 @@ class Router implements HttpRouterInterface
     {
     }
 
-    public function dispatch(RequestInterface $request): mixed
+    public function dispatch(ServerRequestInterface $request): mixed
     {
-        $method = $request->server()['REQUEST_METHOD'];
+        $method = $request->getServerParams()['REQUEST_METHOD'];
 
-        $path = parse_url($request->server()['REQUEST_URI'], PHP_URL_PATH);
+        $path = parse_url($request->getServerParams()['REQUEST_URI'], PHP_URL_PATH);
 
         if (isset($this->routes[$method][$path]) === false) {
             throw new \RuntimeException('Путь не найден', 404);
@@ -135,7 +135,7 @@ class Router implements HttpRouterInterface
         $this->add('POST', $route, $handler, $middlewares);
     }
 
-    private function handleMiddleware(array $middlewares, RequestInterface $request): void
+    private function handleMiddleware(array $middlewares, ServerRequestInterface $request): void
     {
         foreach ($middlewares as $middleware) {
             if (is_callable($middleware)) {
@@ -157,20 +157,20 @@ class Router implements HttpRouterInterface
         }
     }
 
-    private function mapArgs(RequestInterface $request, Route $route): array
+    private function mapArgs(ServerRequestInterface $request, Route $route): array
     {
         $arguments = [];
 
         /** @var RouteParameter $param */
         foreach ($route->params as $param) {
-            $paramExists = in_array($param->name, array_keys($request->get()));
+            $paramExists = in_array($param->name, array_keys($request->getQueryParams()));
 
             if ($param->isRequired === true && $paramExists === false) {
                 throw new \InvalidArgumentException('отсутствуют обязательные аргументы: ' . $param->name);
             }
 
             if ($paramExists === true) {
-                $arguments[] = $request->get()[$param->name];
+                $arguments[] = $request->getQueryParams()[$param->name];
             }
 
             if (empty($param->defaultValue) === false && $paramExists === false) {

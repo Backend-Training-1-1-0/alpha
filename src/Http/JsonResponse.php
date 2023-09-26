@@ -2,12 +2,12 @@
 
 namespace Alpha\Http;
 
-class JsonResponse
+use Psr\Http\Message\{
+    ResponseFactoryInterface,
+    ResponseInterface,
+};
+
+class JsonResponse extends Response
 {
-    public function __construct(
-        public readonly array $data
-    )
-    {
-    }
 
 }

@@ -2,9 +2,9 @@
 
 namespace Alpha\Contracts;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface HttpMiddlewareInterface
 {
-    public function execute(RequestInterface $request): void;
+    public function execute(ServerRequestInterface $request): void;
 }

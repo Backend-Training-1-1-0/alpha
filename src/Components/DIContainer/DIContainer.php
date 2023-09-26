@@ -52,6 +52,13 @@ class DIContainer implements DIContainerInterface
             }
 
             if (isset($this->container[$dependenceType])) {
+                $dependency = $this->container[$dependenceType];
+
+                if (is_callable($dependency)) {
+                    $dependencies[] = $dependency($this);
+                    continue;
+                }
+
                 $dependencies[] = $this->container[$dependenceType];
 
                 continue;
