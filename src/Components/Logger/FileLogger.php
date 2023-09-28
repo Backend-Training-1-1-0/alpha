@@ -7,12 +7,15 @@ use Psr\Log\LogLevel;
 
 class FileLogger implements LoggerInterface
 {
+    private string $projectIndex = 'ALPHA';
+
     public function __construct(
-        private string $projectIndex = 'ALPHA',
         private string  $logFile = '',
     )
     {
-        $this->projectIndex = getenv('PROJECT_INDEX');
+        if (empty(getenv('PROJECT_INDEX')) === false) {
+            $this->projectIndex = getenv('PROJECT_INDEX');
+        }
     }
 
     public function emergency($message, array $context = []): void
