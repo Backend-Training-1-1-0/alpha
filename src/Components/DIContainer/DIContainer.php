@@ -85,7 +85,7 @@ class DIContainer implements DIContainerInterface
     public function singleton(string $contract, string|callable|object $dependency): void
     {
         if (is_string($dependency)) {
-            $instance = new $dependency;
+            $dependency = new $dependency;
         }
 
         if (is_callable($dependency)) {
@@ -141,7 +141,8 @@ class DIContainer implements DIContainerInterface
             $dependency = $this->container[$contract];
 
             if (is_callable($dependency)) {
-                return $dependency($this);
+                $this->container[$contract] = $dependency($this);
+                return $this->container[$contract];
             }
 
             return $dependency;
