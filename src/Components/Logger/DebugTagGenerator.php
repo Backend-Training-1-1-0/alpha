@@ -4,13 +4,16 @@ namespace Alpha\Components\Logger;
 
 class DebugTagGenerator
 {
-    private function init()
+    private string $projectIndex = 'ALPHA';
+
+    private function init(): void
     {
         if (function_exists(__NAMESPACE__ .'\getallheaders') === false) {
-            function getallheaders() {
+            function getAllHeaders(): array
+            {
                 $headers = [];
                 foreach ($_SERVER as $name => $value) {
-                    if (substr($name, 0, 5) == 'HTTP_') {
+                    if (str_starts_with($name, 'HTTP_')) {
                         $headers[
                         str_replace(
                             ' ',
@@ -29,9 +32,9 @@ class DebugTagGenerator
     /**
      * @return void
      */
-    private function createFromHeaders()
+    private function createFromHeaders(): void
     {
-        $headers = getallheaders();
+        $headers = getAllHeaders();
 
         if (isset($headers['X-Debug-Tag']) === false) {
             return;
@@ -43,21 +46,21 @@ class DebugTagGenerator
     /**
      * @return void
      */
-    public function bootstrap()
+    public function bootstrap(): void
     {
         $this->init();
-
         $this->createFromHeaders();
-
 
         if (defined('X_DEBUG_TAG') === true) {
             return;
         }
 
-        $key = 'x-debug-tag-' . 'ALPHA' . '-';
+        if (empty(getenv('PROJECT_INDEX') === false)) {
+            $this->projectIndex = getenv('PROJECT_INDEX');
+        }
 
+        $key = 'x-debug-tag-' . $this->projectIndex . '-';
         $key .= uniqid();
-
         $key .= '-' . gethostname() . '-' . time();
 
         define('X_DEBUG_TAG', md5($key));
