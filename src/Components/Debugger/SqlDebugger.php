@@ -1,8 +1,7 @@
 <?php
 
-namespace Alpha\Components\DatabaseConnection;
+namespace Alpha\Components\Debugger;
 
-use Alpha\Components\DIContainer\DIContainer;
 use Alpha\Components\EventDispatcher\Message;
 use Alpha\Contracts\ObserverInterface;
 use Psr\Log\LoggerInterface;
@@ -10,11 +9,9 @@ use Psr\Log\LoggerInterface;
 class SqlDebugger implements ObserverInterface
 {
     private array $sqlLog;
-    private DIContainer $DIContainer;
 
-    public function __construct()
+    public function __construct(private readonly LoggerInterface $logger)
     {
-        $this->DIContainer = DIContainer::getInstance();
     }
 
     public function observe($event, Message $message): void
@@ -32,6 +29,6 @@ class SqlDebugger implements ObserverInterface
 
     public function writeToFile(string $message): void
     {
-        $this->DIContainer->make(LoggerInterface::class)->debug($message, $this->getSqlLog());
+        $this->logger->debug($message, $this->getSqlLog());
     }
 }
