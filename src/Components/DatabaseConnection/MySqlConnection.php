@@ -13,13 +13,13 @@ use PDOStatement;
 
 class MySqlConnection extends PDO implements DatabaseConnectionInterface
 {
-    private DIContainer $DIContainer;
+    private EventDispatcherInterface $eventDispatcher;
 
     public function __construct($dsn, $username = null, $password = null, $options = null)
     {
         parent::__construct($dsn, $username, $password, $options);
 
-        $this->DIContainer = DIContainer::getInstance();
+        $this->eventDispatcher = container()->make(EventDispatcherInterface::class);
     }
 
     public function exec(string $query, array $bindings = []): int
@@ -119,10 +119,6 @@ class MySqlConnection extends PDO implements DatabaseConnectionInterface
 
     private function triggerLogEvent(PDOStatement $stmt): void
     {
-        $sqlDebugger = $this->DIContainer->make(ObserverInterface::class);
-        $eventDispatcher = $this->DIContainer->make(EventDispatcherInterface::class);
-
-        $eventDispatcher->attach(DatabaseEvent::SQL_CREATED, $sqlDebugger);
-        $eventDispatcher->notify(DatabaseEvent::SQL_CREATED, new Message($stmt->queryString));
+        $this->eventDispatcher->notify(DatabaseEvent::SQL_CREATED, new Message($stmt->queryString));
     }
 }

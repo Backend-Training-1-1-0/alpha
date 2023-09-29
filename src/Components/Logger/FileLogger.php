@@ -7,64 +7,68 @@ use Psr\Log\LogLevel;
 
 class FileLogger implements LoggerInterface
 {
-    public string $projectIndex = 'ALPHA';
-    public string $category = 'application';
+    private string $projectIndex = 'ALPHA';
 
-    public function __construct(public string $logFile)
+    public function __construct(
+        private string  $logFile = '',
+    )
     {
+        if (empty(getenv('PROJECT_INDEX')) === false) {
+            $this->projectIndex = getenv('PROJECT_INDEX');
+        }
     }
 
-    public function emergency($message, array $context = array()): void
+    public function emergency($message, array $context = []): void
     {
         $this->log(LogLevel::EMERGENCY, $message, $context);
     }
 
-    public function alert($message, array $context = array()): void
+    public function alert($message, array $context = []): void
     {
         $this->log(LogLevel::ALERT, $message, $context);
     }
 
-    public function critical($message, array $context = array()): void
+    public function critical($message, array $context = []): void
     {
         $this->log(LogLevel::CRITICAL, $message, $context);
     }
 
-    public function error($message, array $context = array()): void
+    public function error($message, array $context = []): void
     {
         $this->log(LogLevel::ERROR, $message, $context);
     }
 
-    public function warning($message, array $context = array()): void
+    public function warning($message, array $context = []): void
     {
         $this->log(LogLevel::WARNING, $message, $context);
     }
 
-    public function notice($message, array $context = array()): void
+    public function notice($message, array $context = []): void
     {
         $this->log(LogLevel::NOTICE, $message, $context);
     }
 
-    public function info($message, array $context = array()): void
+    public function info($message, array $context = []): void
     {
         $this->log(LogLevel::INFO, $message, $context);
     }
 
-    public function debug($message, array $context = array()): void
+    public function debug($message, array $context = []): void
     {
         $this->log(LogLevel::DEBUG, $message, $context);
     }
 
-    public function log($level, $message, array $context = array()): void
+    public function log($level, $message, array $context = []): void
     {
         if (!$this->isValidLogLevel($level)) {
             throw new \InvalidArgumentException("Несуществующий уровень логгирования: $level");
         }
 
-        $logMessage = $this->formatMessage($level, $message, $context);
+        $logMessage = $this->formatMessage($level, $message, $context) . PHP_EOL;
         file_put_contents($this->logFile, $logMessage, FILE_APPEND);
     }
 
-    private function isValidLogLevel($level): bool
+    protected function isValidLogLevel($level): bool
     {
         return in_array($level, $this->getLevel());
     }
@@ -83,11 +87,11 @@ class FileLogger implements LoggerInterface
         ];
     }
 
-    private function formatMessage($level, $message, $context): string
+    protected function formatMessage($level, $message, $context): string
     {
         $formatLog = [
             'index' => $this->projectIndex,
-            'category' => $this->category,
+            'category' => empty($_SERVER['HTTP_USER_AGENT']) ? 'cli' : 'web',
             'context' => $context ?? '',
             'level' => array_keys($this->getLevel(), $level),
             'level_name' => $level,

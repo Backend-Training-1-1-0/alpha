@@ -36,7 +36,8 @@
     "psr/cache": "^3.0",
     "ext-redis": "*",
     "psr/log": "^3.0.0",
-    "psr/http-factory": "^1.0"
+    "psr/http-factory": "^1.0",
+    "ext-pcntl": "*"
   },
   "autoload": {
     "psr-4": {
