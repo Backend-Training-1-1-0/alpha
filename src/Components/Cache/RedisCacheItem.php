@@ -7,7 +7,7 @@ use Psr\Cache\CacheItemInterface;
 class RedisCacheItem implements CacheItemInterface
 {
     private string $key;
-    private mixed $value;
+    private mixed $value = null;
     private ?\DateTimeInterface $expiresAt;
     private bool $isHit;
 

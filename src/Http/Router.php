@@ -135,6 +135,11 @@ class Router implements HttpRouterInterface
         $this->add('POST', $route, $handler, $middlewares);
     }
 
+    public function delete(string $route, string|callable $handler, callable|string|array $middlewares = []): void
+    {
+        $this->add('DELETE', $route, $handler, $middlewares);
+    }
+
     private function handleMiddleware(array $middlewares, ServerRequestInterface $request): void
     {
         foreach ($middlewares as $middleware) {

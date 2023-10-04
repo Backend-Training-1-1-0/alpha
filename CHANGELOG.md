@@ -6,6 +6,14 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.15.0](https://github.com/EFKO-CR/alpha/releases/tag/0.15.0) ] - 04.10.2023
+
+- Реализовано:
+  - Добавлена возможность регистрировать роут DELETE
+  - Вызов колбек функции для аргумента в DIContainer::call
+- Исправлено:
+  - Объявления свойств для RedisCacheItem
+
 ## [ [0.14.0](https://github.com/EFKO-CR/alpha/releases/tag/0.14.0) ] - 29.09.2023
 
 - Реализовано:
