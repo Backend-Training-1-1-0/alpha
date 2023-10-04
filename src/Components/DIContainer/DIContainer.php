@@ -119,6 +119,14 @@ class DIContainer implements DIContainerInterface
                 continue;
             }
 
+            $argument = $this->config[$parameter->getType()->getName()];
+
+            if (is_callable($argument)) {
+                $arguments[] = $argument($this);
+
+                continue;
+            }
+
             $arguments[] = $this->build($this->config[$parameter->getType()->getName()]);
         }
 

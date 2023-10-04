@@ -12,4 +12,5 @@ interface HttpRouterInterface
     function group(string $prefix, callable $groupCallback, callable|string|array $middleware = []): void;
     function get(string $route, string|callable $handler, callable|string|array $middlewares = []): void;
     function post(string $route, string|callable $handler, callable|string|array $middlewares = []): void;
+    function delete(string $route, string|callable $handler, callable|string|array $middlewares = []): void;
 }
