@@ -6,6 +6,11 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.16.0](https://github.com/EFKO-CR/alpha/releases/tag/0.15.0) ] - 18.10.2023
+
+- Реализовано:
+  - Поддержка цепочки вызовов midlleware
+
 ## [ [0.15.0](https://github.com/EFKO-CR/alpha/releases/tag/0.15.0) ] - 04.10.2023
 
 - Реализовано:
