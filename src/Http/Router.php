@@ -7,6 +7,7 @@ use Alpha\Contracts\{
     HttpRouterInterface,
 };
 use InvalidArgumentException;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Router implements HttpRouterInterface
@@ -33,19 +34,27 @@ class Router implements HttpRouterInterface
             throw new \RuntimeException('Путь не найден', 404);
         }
 
+        //TODO: получать из DI по интерфейсу
+        $response = new Response();
+
         /** @var Route $route */
         foreach ($this->routes[$method][$path] as $route) {
             $handler = $route->handler;
 
             // Вызов глобального middleware
-            $this->handleMiddleware($this->middlewares, $request);
+            $response = $this->handleMiddleware($this->middlewares, $request, $response);
 
             // Вызов middleware маршрута
-            $this->handleMiddleware($route->middleware, $request);
+            $response = $this->handleMiddleware($route->middleware, $request, $response);
 
             //вызов middleware группы
             foreach ($route->groupStack as $group) {
-                $this->handleMiddleware($this->groupMiddlewares[$group], $request);
+                $response = $this->handleMiddleware($this->groupMiddlewares[$group], $request, $response);
+            }
+
+            //костыль, выпилить как то
+            if ($response->getStatusCode() !== 200) {
+                return $response;
             }
 
             $defaultArguments = $this->mapArgs($request, $route);
@@ -140,26 +149,47 @@ class Router implements HttpRouterInterface
         $this->add('DELETE', $route, $handler, $middlewares);
     }
 
-    private function handleMiddleware(array $middlewares, ServerRequestInterface $request): void
-    {
-        foreach ($middlewares as $middleware) {
-            if (is_callable($middleware)) {
-                $middleware($request);
-                continue;
-            }
+    private function handleMiddleware(
+        array $middlewares,
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ): ResponseInterface {
 
-            if (is_string($middleware) === false) {
-                throw new InvalidArgumentException('Значение middlewares должно быть строкой');
-            }
+        $middlewareChain = $this->createMiddlewareChain($middlewares);
 
-            $middlewareInstance = new $middleware;
+        return $middlewareChain($request, $response);
+    }
 
-            if ($middlewareInstance instanceof HttpMiddlewareInterface === false) {
-                throw new InvalidArgumentException("Неверный тип объекта $middleware");
-            }
+    private function createMiddlewareChain(array $middlewares): callable {
+        $lastMiddleware = function ($request, $response) {
+            // Это базовый обработчик. Вы можете модифицировать это поведение, если хотите что-то выполнить в конце цепочки.
+            return $response;
+        };
 
-            $middlewareInstance->execute($request);
+        while ($middleware = array_pop($middlewares)) {
+            $next = $lastMiddleware;
+
+            $lastMiddleware = function ($request, $response) use ($middleware, $next) {
+                if (is_callable($middleware)) {
+                    return $middleware($request, $response, $next);
+                }
+
+                if (is_string($middleware) === false) {
+                    throw new InvalidArgumentException('Значение middlewares должно быть строкой');
+                }
+
+                /** @var HttpMiddlewareInterface $middlewareInstance */
+                $middlewareInstance = new $middleware;
+
+                if ($middlewareInstance instanceof HttpMiddlewareInterface === false) {
+                    throw new InvalidArgumentException("Неверный тип объекта $middleware");
+                }
+
+                return $middlewareInstance->execute($request, $response, $next);
+            };
         }
+
+        return $lastMiddleware;
     }
 
     private function mapArgs(ServerRequestInterface $request, Route $route): array
