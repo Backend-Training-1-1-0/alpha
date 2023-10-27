@@ -2,20 +2,24 @@
 
 namespace Alpha\Components\Logger;
 
+use Alpha\Components\Logger\StateProcessor\LogStateProcessor;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 class FileLogger implements LoggerInterface
 {
     private string $projectIndex = 'ALPHA';
+    private LogStateProcessor $logStateProcessor;
 
     public function __construct(
-        private string  $logFile = '',
+        private readonly string $logFile = '',
     )
     {
         if (empty(getenv('PROJECT_INDEX')) === false) {
             $this->projectIndex = getenv('PROJECT_INDEX');
         }
+
+        $this->logStateProcessor = new LogStateProcessor($this->projectIndex);
     }
 
     public function emergency($message, array $context = []): void
@@ -89,24 +93,8 @@ class FileLogger implements LoggerInterface
 
     protected function formatMessage($level, $message, $context): string
     {
-        $formatLog = [
-            'index' => $this->projectIndex,
-            'category' => empty($_SERVER['HTTP_USER_AGENT']) ? 'cli' : 'web',
-            'context' => $context ?? '',
-            'level' => array_keys($this->getLevel(), $level),
-            'level_name' => $level,
-            'action' => $context['action'] ?? '',
-            'action_type' => $context['action_type'] ?? '',
-            'datetime' => date('Y-m-d H:i:s'),
-            'timestamp' => (new \DateTimeImmutable)->format('Y-m-d H:i:s.u'),
-            'userId' => null,
-            'ip' => $_SERVER['HTTP_X_REAL_IP'] ?? null,
-            'real_ip' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
-            'x_debug_tag' => X_DEBUG_TAG,
-            'message' => $message,
-            'exception' => $context['exception'] ?? '',
-            'extras' => $context['exception'] ?? '',
-        ];
-        return json_encode($formatLog);
+        $loggingState = $this->logStateProcessor->process($level, $message, $context);
+
+        return json_encode((array)$loggingState);
     }
 }

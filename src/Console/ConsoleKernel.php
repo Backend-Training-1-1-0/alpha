@@ -69,8 +69,6 @@ class ConsoleKernel implements ConsoleKernelInterface
 
     public function terminate(): void
     {
-        echo 'Завершение скрипта';
-
         exit;
     }
 

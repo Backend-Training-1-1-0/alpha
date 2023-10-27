@@ -13,13 +13,15 @@ use PDOStatement;
 
 class MySqlConnection extends PDO implements DatabaseConnectionInterface
 {
-    private EventDispatcherInterface $eventDispatcher;
-
-    public function __construct($dsn, $username = null, $password = null, $options = null)
+    public function __construct(
+        private EventDispatcherInterface $eventDispatcher,
+        string                           $dsn,
+        ?string                          $username = null,
+        ?string                          $password = null,
+        ?array                           $options = null
+    )
     {
         parent::__construct($dsn, $username, $password, $options);
-
-        $this->eventDispatcher = container()->make(EventDispatcherInterface::class);
     }
 
     public function exec(string $query, array $bindings = []): int
