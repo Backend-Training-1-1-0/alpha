@@ -39,7 +39,7 @@ class HttpKernel implements HttpKernelInterface
         return $this->response->withBody(Stream::create($response));
     }
 
-    private function setErrorHandler(callable $handlerCallback)
+    private function setErrorHandler(callable $handlerCallback): void
     {
         set_exception_handler(function ($exception) use ($handlerCallback) {
             $handlerCallback($exception);

@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+
+    php-cli:
+        image: ${REGISTRY}/${PHP_CLI_CONTAINER_NAME}:${IMAGE_TAG}
+        volumes:
+            - .:/app
