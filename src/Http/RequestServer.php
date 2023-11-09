@@ -4,7 +4,6 @@ namespace Alpha\Http;
 
 use Psr\Http\Message\{
     ServerRequestInterface,
-    StreamInterface,
     UploadedFileInterface,
     UriInterface,
 };

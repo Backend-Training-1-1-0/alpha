@@ -1,1 +1,14 @@
+# phpstorm project files
 .idea
+
+# ENV files
+.env
+
+# composer vendor dir
+/vendor
+
+# phpunit settings
+phpunit.xml
+
+# runtime dir
+/runtime

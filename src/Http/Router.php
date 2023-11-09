@@ -2,6 +2,7 @@
 
 namespace Alpha\Http;
 
+use Alpha\Components\DIContainer\DIContainer;
 use Alpha\Contracts\{
     HttpMiddlewareInterface,
     HttpRouterInterface,
@@ -20,7 +21,9 @@ class Router implements HttpRouterInterface
 
     private array $groupStack = [];
 
-    public function __construct()
+    public function __construct(
+        private DIContainer $container,
+    )
     {
     }
 
@@ -59,7 +62,7 @@ class Router implements HttpRouterInterface
 
             $defaultArguments = $this->mapArgs($request, $route);
 
-            return container()->call($handler, $route->action, $defaultArguments);
+            return $this->container->call($handler, $route->action, $defaultArguments);
         }
     }
 
