@@ -183,7 +183,7 @@ class Router implements HttpRouterInterface
                 }
 
                 /** @var HttpMiddlewareInterface $middlewareInstance */
-                $middlewareInstance = new $middleware;
+                $middlewareInstance = $this->container->make($middleware);
 
                 if ($middlewareInstance instanceof HttpMiddlewareInterface === false) {
                     throw new InvalidArgumentException("Неверный тип объекта $middleware");
