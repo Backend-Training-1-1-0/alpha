@@ -20,11 +20,12 @@ class Router implements HttpRouterInterface
     private array $groupMiddlewares = [];
 
     private array $groupStack = [];
+    private DIContainer $container;
 
     public function __construct(
-        private DIContainer $container,
     )
     {
+        $this->container = DIContainer::getInstance();
     }
 
     public function dispatch(ServerRequestInterface $request): mixed

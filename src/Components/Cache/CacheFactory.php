@@ -4,8 +4,6 @@ namespace Alpha\Components\Cache;
 
 use Alpha\Contracts\CacheAdapterInterface;
 
-require_once 'functions.php';
-
 class CacheFactory
 {
     public static function make(array $config): CacheAdapterInterface

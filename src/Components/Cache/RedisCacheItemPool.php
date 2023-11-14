@@ -25,7 +25,7 @@ class RedisCacheItemPool implements CacheItemPoolInterface
         $value = $this->redis->get($key);
 
         if ($value !== false) {
-            $item->set($value);
+            $item->set(unserialize($value));
             $item->expiresAt($this->redis->ttl($key) > 0 ? new \DateTimeImmutable('+' . $this->redis->ttl($key) . ' seconds') : null);
             $item->setIsHit(true);
         }
@@ -91,6 +91,10 @@ class RedisCacheItemPool implements CacheItemPoolInterface
         $expiration = $item->getExpiration();
 
         $seconds = null;
+
+        if (is_array($value) || is_object($value)) {
+            $value = serialize($value);
+        }
 
         if ($seconds === null) {
             return $this->redis->set($key, $value);
