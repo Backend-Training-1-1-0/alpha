@@ -7,6 +7,7 @@ use Psr\Http\Message\StreamInterface;
 
 trait MessageTrait
 {
+    private array $headerNames = [];
     private array $headers = [];
     private string $protocol = '1.1';
     private StreamInterface|null $stream = null;
@@ -110,6 +111,49 @@ trait MessageTrait
 
     private function setHeaders(array $headers): void
     {
-        $this->headers = \array_merge($this->headers, $headers);
+//        $this->headers = \array_merge($this->headers, $headers);
+
+        $this->headerNames = $this->headers = [];
+        foreach ($headers as $header => $value) {
+            // Numeric array keys are converted to int by PHP.
+            $header = (string) $header;
+
+            $value = $this->normalizeHeaderValue($value);
+            $normalized = strtolower($header);
+            if (isset($this->headerNames[$normalized])) {
+                $header = $this->headerNames[$normalized];
+                $this->headers[$header] = array_merge($this->headers[$header], $value);
+            } else {
+                $this->headerNames[$normalized] = $header;
+                $this->headers[$header] = $value;
+            }
+        }
+    }
+
+    private function normalizeHeaderValue($value): array
+    {
+        if (!is_array($value)) {
+            return $this->trimAndValidateHeaderValues([$value]);
+        }
+
+        if (count($value) === 0) {
+            throw new \InvalidArgumentException('Header value can not be an empty array.');
+        }
+
+        return $this->trimAndValidateHeaderValues($value);
+    }
+
+    private function trimAndValidateHeaderValues(array $values): array
+    {
+        return array_map(function ($value) {
+            if (!is_scalar($value) && null !== $value) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Header value must be scalar or null but %s provided.',
+                    is_object($value) ? get_class($value) : gettype($value)
+                ));
+            }
+
+            return trim((string) $value, " \t");
+        }, array_values($values));
     }
 }

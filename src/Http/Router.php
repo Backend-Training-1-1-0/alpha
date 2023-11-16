@@ -20,11 +20,12 @@ class Router implements HttpRouterInterface
     private array $groupMiddlewares = [];
 
     private array $groupStack = [];
+    private DIContainer $container;
 
     public function __construct(
-        private DIContainer $container,
     )
     {
+        $this->container = DIContainer::getInstance();
     }
 
     public function dispatch(ServerRequestInterface $request): mixed
@@ -182,7 +183,7 @@ class Router implements HttpRouterInterface
                 }
 
                 /** @var HttpMiddlewareInterface $middlewareInstance */
-                $middlewareInstance = new $middleware;
+                $middlewareInstance = $this->container->make($middleware);
 
                 if ($middlewareInstance instanceof HttpMiddlewareInterface === false) {
                     throw new InvalidArgumentException("Неверный тип объекта $middleware");
