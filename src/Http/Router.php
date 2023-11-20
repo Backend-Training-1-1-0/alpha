@@ -2,9 +2,8 @@
 
 namespace Alpha\Http;
 
-use Alpha\Components\DIContainer\DIContainer;
+use Alpha\Http\factory\MiddlewareFactory;
 use Alpha\Contracts\{
-    HttpMiddlewareInterface,
     HttpRouterInterface,
 };
 use InvalidArgumentException;
@@ -20,13 +19,10 @@ class Router implements HttpRouterInterface
     private array $groupMiddlewares = [];
 
     private array $groupStack = [];
-    private DIContainer $container;
 
     public function __construct(
-    )
-    {
-        $this->container = DIContainer::getInstance();
-    }
+        private readonly MiddlewareFactory $middlewareFactory,
+    ) { }
 
     public function dispatch(ServerRequestInterface $request): mixed
     {
@@ -63,7 +59,7 @@ class Router implements HttpRouterInterface
 
             $defaultArguments = $this->mapArgs($request, $route);
 
-            return $this->container->call($handler, $route->action, $defaultArguments);
+            return container()->call($handler, $route->action, $defaultArguments);
         }
     }
 
@@ -159,41 +155,9 @@ class Router implements HttpRouterInterface
         ResponseInterface $response
     ): ResponseInterface {
 
-        $middlewareChain = $this->createMiddlewareChain($middlewares);
+        $middlewareChain = $this->middlewareFactory->createMiddlewareChain($middlewares);
 
         return $middlewareChain($request, $response);
-    }
-
-    private function createMiddlewareChain(array $middlewares): callable {
-        $lastMiddleware = function ($request, $response) {
-            // Это базовый обработчик. Вы можете модифицировать это поведение, если хотите что-то выполнить в конце цепочки.
-            return $response;
-        };
-
-        while ($middleware = array_pop($middlewares)) {
-            $next = $lastMiddleware;
-
-            $lastMiddleware = function ($request, $response) use ($middleware, $next) {
-                if (is_callable($middleware)) {
-                    return $middleware($request, $response, $next);
-                }
-
-                if (is_string($middleware) === false) {
-                    throw new InvalidArgumentException('Значение middlewares должно быть строкой');
-                }
-
-                /** @var HttpMiddlewareInterface $middlewareInstance */
-                $middlewareInstance = $this->container->make($middleware);
-
-                if ($middlewareInstance instanceof HttpMiddlewareInterface === false) {
-                    throw new InvalidArgumentException("Неверный тип объекта $middleware");
-                }
-
-                return $middlewareInstance->execute($request, $response, $next);
-            };
-        }
-
-        return $lastMiddleware;
     }
 
     private function mapArgs(ServerRequestInterface $request, Route $route): array
