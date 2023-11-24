@@ -6,6 +6,8 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.19.0](https://github.com/EFKO-CR/alpha/releases/tag/0.19.0) ] - 24.11.2023
+
 - Реализовано:
   - Объект MiddlewareFactory и его использование в роутинге
 
