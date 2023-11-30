@@ -6,6 +6,11 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.20.0](https://github.com/EFKO-CR/alpha/releases/tag/0.20.0) ] - 01.12.2023
+
+- Реализовано:
+  - EntityManager для создания и работы с сущностями бд
+
 ## [ [0.19.1](https://github.com/EFKO-CR/alpha/releases/tag/0.19.1) ] - 30.11.2023
 
 - Исправлено:
