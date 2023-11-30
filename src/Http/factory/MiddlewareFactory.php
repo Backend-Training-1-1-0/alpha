@@ -29,7 +29,7 @@ class MiddlewareFactory
                     throw new InvalidArgumentException('Значение middlewares должно быть строкой');
                 }
                 /** @var HttpMiddlewareInterface $middlewareInstance */
-                $middlewareInstance = $this->container->make($middleware);
+                $middlewareInstance = $this->container->build($middleware);
                 if ($middlewareInstance instanceof HttpMiddlewareInterface === false) {
                     throw new InvalidArgumentException("Неверный тип объекта $middleware");
                 }
