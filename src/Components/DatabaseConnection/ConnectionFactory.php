@@ -6,8 +6,6 @@ use Alpha\Contracts\DatabaseConnectionInterface;
 use Alpha\Contracts\EventDispatcherInterface;
 use Exception;
 
-include 'functions.php';
-
 class ConnectionFactory
 {
     private static EventDispatcherInterface $eventDispatcher;
