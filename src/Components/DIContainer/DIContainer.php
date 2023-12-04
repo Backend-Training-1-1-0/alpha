@@ -64,6 +64,10 @@ class DIContainer implements DIContainerInterface
                 continue;
             }
 
+            if (isset($this->config[$dependenceType]) === false) {
+                throw new \OutOfRangeException('Нет ' . $dependenceType . ' в config');
+            }
+
             $dependencies[] = $this->build($this->config[$dependenceType]);
         }
 
