@@ -38,6 +38,10 @@ class RedisCacheItemPool implements CacheItemPoolInterface
      */
     public function getItems(array $keys = []): iterable
     {
+        if (count($keys) === 0) {
+            return $this->getAllItems();
+        }
+
         $items = [];
 
         foreach ($keys as $key) {
@@ -133,5 +137,29 @@ class RedisCacheItemPool implements CacheItemPoolInterface
         $this->deferredItems = [];
 
         return true;
+    }
+
+    public function getAllItems(): array
+    {
+        $items = [];
+
+        $keys = $this->getKeys();
+
+        foreach ($keys as $key) {
+            $item = $this->getItem($key);
+
+            if ($item instanceof CacheItemInterface) {
+                $items[$key] = $item;
+            }
+        }
+
+        return $items;
+    }
+
+    public function getKeys(): array
+    {
+        $keys = $this->redis->keys('*');
+
+        return $keys ?: [];
     }
 }
