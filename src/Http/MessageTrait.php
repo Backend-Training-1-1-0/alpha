@@ -36,13 +36,15 @@ trait MessageTrait
 
     public function hasHeader(string $name): bool
     {
-        return isset($this->headers[$name]);
+        return isset($this->headerNames[$name]);
     }
 
     public function getHeader(string $name): array
     {
         if ($this->hasHeader($name)) {
-            return [$this->headers[$name]];
+            $headerName = $this->headerNames[$name];
+
+            return $this->headers[$headerName];
         }
 
         return [];
