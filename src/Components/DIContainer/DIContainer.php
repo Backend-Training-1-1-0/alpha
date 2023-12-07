@@ -34,6 +34,10 @@ class DIContainer implements DIContainerInterface
 
     public function build(string $className): object
     {
+        if (class_exists($className) === false) {
+            throw new \InvalidArgumentException("Класс $className не существует");
+        }
+
         if (method_exists($className, '__construct') === false) {
             return new $className();
         }
@@ -64,11 +68,7 @@ class DIContainer implements DIContainerInterface
                 continue;
             }
 
-            if (isset($this->config[$dependenceType]) === false) {
-                throw new \OutOfRangeException('Нет ' . $dependenceType . ' в config');
-            }
-
-            $dependencies[] = $this->build($this->config[$dependenceType]);
+            $dependencies[] = $this->build($this->config[$dependenceType] ?? $dependenceType);
         }
 
         return new $className(...$dependencies);

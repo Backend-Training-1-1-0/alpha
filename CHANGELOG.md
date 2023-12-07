@@ -6,6 +6,11 @@
 Формат основан на [стандарте формата CHANGELOG](https://keepachangelog.com/en/1.0.0/),
 и придерживается [правил версионирования](https://semver.org/spec/v2.0.0.html).
 
+## [ [0.21.0](https://github.com/EFKO-CR/alpha/releases/tag/0.21.0) ] - 07.12.2023
+
+- Реализовано:
+  - Di-container инстанциировать класс по типу, при условии существования класса
+
 ## [ [0.20.2](https://github.com/EFKO-CR/alpha/releases/tag/0.20.2) ] - 06.12.2023
 
 - Исправлено:
