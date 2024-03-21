@@ -58,6 +58,7 @@
   - Добавлен LogStateProcessor для обработки контекста логирования
   - EventDispatcher внедрен как зависимость в MySqlConnection
   - Удалены глобальные функции получения соединения с бд и редис
+  - Удален DebugTagGenerator
 
 ## [ [0.16.0](https://github.com/EFKO-CR/alpha/releases/tag/0.16.0) ] - 18.10.2023
 
