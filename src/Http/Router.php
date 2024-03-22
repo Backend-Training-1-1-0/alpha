@@ -31,7 +31,24 @@ class Router implements HttpRouterInterface
         $path = parse_url($request->getServerParams()['REQUEST_URI'], PHP_URL_PATH);
 
         if (isset($this->routes[$method][$path]) === false) {
-            throw new \RuntimeException('Путь не найден', 404);
+
+            $notFoundRoute = true;
+            foreach ($this->routes[$method] as $uri => $route) {
+                $pattern = preg_replace('#\{[^}]+\}#', '(\d+)', $uri);
+                $pattern = "#^" . $pattern . "$#";
+
+                if (preg_match($pattern, $path, $matches)) {
+                    $this->routes[$method][$path] = $route;
+                    unset($this->routes[$method][$uri]);
+
+                    $notFoundRoute = false;
+                    break;
+                }
+            }
+
+            if ($notFoundRoute) {
+                throw new \RuntimeException('Путь не найден', 404);
+            }
         }
 
         //TODO: получать из DI по интерфейсу
@@ -144,6 +161,16 @@ class Router implements HttpRouterInterface
         $this->add('POST', $route, $handler, $middlewares);
     }
 
+    public function put(string $route, string|callable $handler, callable|string|array $middlewares = []): void
+    {
+        $this->add('PUT', $route, $handler, $middlewares);
+    }
+
+    public function patch(string $route, string|callable $handler, callable|string|array $middlewares = []): void
+    {
+        $this->add('PATCH', $route, $handler, $middlewares);
+    }
+
     public function delete(string $route, string|callable $handler, callable|string|array $middlewares = []): void
     {
         $this->add('DELETE', $route, $handler, $middlewares);
@@ -169,6 +196,11 @@ class Router implements HttpRouterInterface
             $paramExists = in_array($param->name, array_keys($request->getQueryParams()));
 
             if ($param->isRequired === true && $paramExists === false) {
+                $arguments = $this->mapArgsFromUri($request, $route);
+                if (empty($arguments) === false) {
+                    return $arguments;
+                }
+
                 throw new \InvalidArgumentException('отсутствуют обязательные аргументы: ' . $param->name);
             }
 
@@ -178,6 +210,22 @@ class Router implements HttpRouterInterface
 
             if (empty($param->defaultValue) === false && $paramExists === false) {
                 $arguments[] = $param->defaultValue;
+            }
+        }
+
+        return $arguments;
+    }
+
+    private function mapArgsFromUri(ServerRequestInterface $request, Route $route): array
+    {
+        $pattern = preg_replace('#\{[^}]+\}#', '(\d+)', $route->path);
+        $pattern = "#^" . $pattern . "$#";
+
+        $arguments = [];
+        if (preg_match($pattern, $request->getUri()->getScheme(), $matches)) {
+            array_shift($matches);
+            foreach ($matches as $match) {
+                $arguments[] = $match;
             }
         }
 
