@@ -55,6 +55,8 @@ class RequestServer implements ServerRequestInterface
         if ('' !== $body && null !== $body) {
             $this->stream = Stream::create($body);
         }
+
+        $this->cookieParams = $_COOKIE;
     }
 
     public function getServerParams(): array
